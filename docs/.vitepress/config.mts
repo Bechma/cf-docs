@@ -49,10 +49,10 @@ const libraries = {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "CyberFabric documentation site",
-  description: "Cyberfabric docs, tutorials and how-to guides",
+  title: "Gears documentation site",
+  description: "Gears docs, tutorials and how-to guides",
   themeConfig: {
-    siteTitle: "CF Docs",
+    siteTitle: "Gears Docs",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Docs", link: "/intro/introduction", activeMatch: '/intro/' },
@@ -71,7 +71,7 @@ export default defineConfig({
           text: "Intro",
           collapsed: false,
           items: [
-            { text: "What is CyberFabric?", link: "/intro/introduction" },
+            { text: "What is Gears?", link: "/intro/introduction" },
             { text: "Getting Started", link: "/intro/getting-started" },
             { text: "Architecture", link: "/intro/architecture" },
             { text: "FAQ", link: "/intro/faq" },
@@ -121,7 +121,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/cyberfabric/cf-docs/edit/main/docs/:path'
+      pattern: 'https://github.com/Bechma/cf-docs/edit/dev/docs/:path'
     },
 
     lastUpdated: {
@@ -133,7 +133,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/cyberfabric" },
+      { icon: "github", link: "https://github.com/Bechma" },
     ]
   }
 })

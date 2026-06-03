@@ -3,12 +3,12 @@
 layout: home
 
 hero:
-  name: "CyberFabric"
+  name: "Gears"
   text: "Documentation, tutorials and how-to guides"
   tagline: Your trusted partner for cloud and cybersecurity solutions
   actions:
     - theme: brand
-      text: What is CyberFabric?
+      text: What is Gears?
       link: /intro/introduction
     - theme: alt
       text: Get Started
