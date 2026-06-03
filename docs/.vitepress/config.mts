@@ -51,6 +51,7 @@ const libraries = {
 export default defineConfig({
   title: "Gears documentation site",
   description: "Gears docs, tutorials and how-to guides",
+  base: "/cf-docs/",
   themeConfig: {
     siteTitle: "Gears Docs",
     // https://vitepress.dev/reference/default-theme-config
