@@ -75,6 +75,7 @@ export default defineConfig({
             { text: "What is Gears?", link: "/intro/introduction" },
             { text: "Getting Started", link: "/intro/getting-started" },
             { text: "Architecture", link: "/intro/architecture" },
+            { text: "Manifest", link: "/intro/manifest" },
             { text: "FAQ", link: "/intro/faq" },
           ]
         },
