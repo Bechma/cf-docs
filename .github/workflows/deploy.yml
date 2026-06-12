@@ -38,6 +38,8 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Install dependencies
         run: bun install
+      - name: Fetch external docs
+        run: bun run docs:fetch
       - name: Build with VitePress
         run: bun run docs:build
       - name: Upload artifact
