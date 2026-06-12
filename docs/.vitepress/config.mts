@@ -1,5 +1,27 @@
 import { defineConfig } from "vitepress"
 
+const toolkit = {
+  text: "Toolkit",
+  collapsed: false,
+  items: [
+    { text: "Overview", link: "/toolkit/" },
+    { text: "Gear Overview", link: "/toolkit/00_gear_overview" },
+    { text: "ToolKit Overview", link: "/toolkit/01_overview" },
+    { text: "Gear Layout & SDK Pattern", link: "/toolkit/02_gear_layout_and_sdk_pattern" },
+    { text: "ClientHub & Plugins", link: "/toolkit/03_clienthub_and_plugins" },
+    { text: "REST Operation Builder", link: "/toolkit/04_rest_operation_builder" },
+    { text: "Errors (RFC 9457)", link: "/toolkit/05_errors_rfc9457" },
+    { text: "AuthN/AuthZ & Secure ORM", link: "/toolkit/06_authn_authz_secure_orm" },
+    { text: "OData Pagination & Filtering", link: "/toolkit/07_odata_pagination_select_filter" },
+    { text: "Lifecycle & Stateful Tasks", link: "/toolkit/08_lifecycle_stateful_tasks" },
+    { text: "OoP gRPC SDK Pattern", link: "/toolkit/09_oop_grpc_sdk_pattern" },
+    { text: "Checklists & Templates", link: "/toolkit/10_checklists_and_templates" },
+    { text: "Database Patterns", link: "/toolkit/11_database_patterns" },
+    { text: "Unit Testing", link: "/toolkit/12_unit_testing" },
+    { text: "E2E Testing", link: "/toolkit/13_e2e_testing" },
+  ]
+};
+
 const libraries = {
   text: "Libraries",
   collapsed: false,
@@ -49,13 +71,16 @@ const libraries = {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "CyberFabric documentation site",
-  description: "Cyberfabric docs, tutorials and how-to guides",
+  title: "Gears documentation site",
+  description: "Gears docs, tutorials and how-to guides",
+  base: "/gears-webdocs/",
+  ignoreDeadLinks: true,
   themeConfig: {
-    siteTitle: "CF Docs",
+    siteTitle: "Gears Docs",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Docs", link: "/intro/introduction", activeMatch: '/intro/' },
+      { text: "Toolkit", link: "/toolkit/", activeMatch: '/toolkit/' },
       { text: "Reference", link: "/reference/api-reference", activeMatch: '/reference/' },
       {
         text: "Examples", items: [
@@ -65,15 +90,19 @@ export default defineConfig({
       },
     ],
 
+    // https://vitepress.dev/reference/default-theme-sidebar
     sidebar: {
       "/intro": [
         {
           text: "Intro",
           collapsed: false,
           items: [
-            { text: "What is CyberFabric?", link: "/intro/introduction" },
+            { text: "What is Gears?", link: "/intro/introduction" },
             { text: "Getting Started", link: "/intro/getting-started" },
             { text: "Architecture", link: "/intro/architecture" },
+            { text: "Lifecycle", link: "/intro/life-cycle" },
+            { text: "Manifest", link: "/intro/manifest" },
+            { text: "Plugins", link: "/intro/plugins" },
             { text: "FAQ", link: "/intro/faq" },
           ]
         },
@@ -104,6 +133,9 @@ export default defineConfig({
           ]
         }
       ],
+      "/toolkit": [
+        toolkit,
+      ],
       "/reference": [
         {
           text: "API",
@@ -121,7 +153,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/cyberfabric/cf-docs/edit/main/docs/:path'
+      pattern: 'https://github.com/Bechma/cf-docs/edit/dev/docs/:path'
     },
 
     lastUpdated: {
@@ -133,7 +165,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/cyberfabric" },
+      { icon: "github", link: "https://github.com/Bechma" },
     ]
   }
 })

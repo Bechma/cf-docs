@@ -1,3 +1,11 @@
 /node_modules
 /docs/.vitepress/cache
+/docs/.vitepress/dist
 /refs
+
+# External docs fetched from gears-rust (see scripts/fetch-external-docs.sh)
+/docs/intro/architecture.md
+/docs/intro/plugins.md
+/docs/intro/img/
+/docs/img/
+/docs/toolkit/
