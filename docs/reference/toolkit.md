@@ -8,14 +8,31 @@ All Toolkit crates are prefixed with `cf-gears-toolkit` and designed to work tog
 
 | Group | Crates | Purpose |
 |---|---|---|
-| **Module system** | [toolkit](./toolkit/toolkit-macros), [toolkit-macros](./toolkit/toolkit-macros), [toolkit-sdk](./toolkit/toolkit-sdk) | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
-| **Data & storage** | [toolkit-db](./toolkit/toolkit-db), [toolkit-db-macros](./toolkit/toolkit-db-macros) | SeaORM integration, `SecureConn`, tenant-scoped queries, migrations |
-| **Networking** | [toolkit-http](./toolkit/toolkit-http), [toolkit-transport-grpc](./toolkit/toolkit-transport-grpc) | HTTP client with retries and SSRF protection, gRPC security context propagation |
-| **Errors** | [toolkit-canonical-errors](./toolkit/toolkit-canonical-errors), [toolkit-canonical-errors-macro](./toolkit/toolkit-canonical-errors-macro) | RFC 9457 Problem Details, canonical error types (AIP-193), `resource_error!` macro |
-| **Query & data access** | [toolkit-odata](./toolkit/toolkit-odata), [toolkit-odata-macros](./toolkit/toolkit-odata-macros) | OData filter/pagination primitives and proc-macros |
-| **Security** | [toolkit-auth](./toolkit/toolkit-auth), [toolkit-security](./toolkit/toolkit-security) | JWT/JWKS validation, OAuth2 client-credentials, `SecurityContext`, `AccessScope` |
-| **Type system** | [toolkit-gts](./toolkit/toolkit-gts), [toolkit-gts-macros](./toolkit/toolkit-gts-macros) | Global Type System (GTS) for schema-validated extensibility |
-| **Platform** | [toolkit-node-info](./toolkit/toolkit-node-info) | System information (hardware UUID, OS, CPU, GPU, network) |
+| **Module system** | [toolkit][src-toolkit], [toolkit-macros][src-macros], [toolkit-sdk][src-sdk] | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
+| **Data & storage** | [toolkit-db][src-db], [toolkit-db-macros][src-db-macros] | SeaORM integration, `SecureConn`, tenant-scoped queries, migrations |
+| **Networking** | [toolkit-http][src-http], [toolkit-transport-grpc][src-transport-grpc] | HTTP client with retries and SSRF protection, gRPC security context propagation |
+| **Errors** | [toolkit-canonical-errors][src-errors], [toolkit-canonical-errors-macro][src-errors-macro] | RFC 9457 Problem Details, canonical error types (AIP-193), `resource_error!` macro |
+| **Query & data access** | [toolkit-odata][src-odata], [toolkit-odata-macros][src-odata-macros] | OData filter/pagination primitives and proc-macros |
+| **Security** | [toolkit-auth][src-auth], [toolkit-security][src-security] | JWT/JWKS validation, OAuth2 client-credentials, `SecurityContext`, `AccessScope` |
+| **Type system** | [toolkit-gts][src-gts], [toolkit-gts-macros][src-gts-macros] | Global Type System (GTS) for schema-validated extensibility |
+| **Platform** | [toolkit-node-info][src-node-info] | System information (hardware UUID, OS, CPU, GPU, network) |
+
+[src-toolkit]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit
+[src-macros]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-macros
+[src-sdk]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-sdk
+[src-db]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-db
+[src-db-macros]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-db-macros
+[src-http]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-http
+[src-transport-grpc]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-transport-grpc
+[src-errors]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-canonical-errors
+[src-errors-macro]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-canonical-errors-macro
+[src-odata]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-odata
+[src-odata-macros]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-odata-macros
+[src-auth]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-auth
+[src-security]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-security
+[src-gts]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-gts
+[src-gts-macros]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-gts-macros
+[src-node-info]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-node-info
 
 For the full library reference with detailed descriptions, see the [API reference](/reference/api-reference).
 

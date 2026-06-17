@@ -105,7 +105,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/Bechma/gears-webdocs/edit/main/docs/:path'
+      pattern: 'https://github.com/constructorfabric/gears-webdocs/edit/main/docs/:path'
     },
 
     lastUpdated: {
@@ -117,7 +117,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/Bechma" },
+      { icon: "github", link: "https://github.com/constructorfabric" },
     ]
   }
 })
