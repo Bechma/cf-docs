@@ -1,6 +1,6 @@
 # OData
 
-Gears provides OData-style query capabilities for REST APIs: filtering, pagination, field selection, and ordering. These are implemented through `modkit-odata` and integrated into route registration via `OperationBuilder`.
+Gears provides OData-style query capabilities for REST APIs: filtering, pagination, field selection, and ordering. These are implemented through `toolkit-odata` and integrated into route registration via `OperationBuilder`.
 
 ## Filterable DTOs
 
@@ -50,7 +50,7 @@ pub async fn list_items(
 
 ## QueryBuilder (client-side)
 
-`modkit-sdk` provides a typed `QueryBuilder` for constructing OData queries with compile-time field checking and deterministic filter hashing for cursor pagination:
+`toolkit-sdk` provides a typed `QueryBuilder` for constructing OData queries with compile-time field checking and deterministic filter hashing for cursor pagination:
 
 ```rust
 let query = QueryBuilder::<ItemDtoFilterField>::new()

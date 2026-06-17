@@ -63,7 +63,7 @@ pub async fn get_item(
 
 Modules implementing `GrpcServiceCapability` register tonic services during the gRPC phase. gRPC is primarily used for out-of-process inter-module communication, implementing the same SDK traits as in-process adapters (see [SDK](/intro/core/sdk)).
 
-Security context is propagated via gRPC metadata using `modkit-transport-grpc`.
+Security context is propagated via gRPC metadata using `toolkit-transport-grpc`.
 
 ## Key rules
 

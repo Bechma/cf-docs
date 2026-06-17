@@ -1,6 +1,6 @@
 # Runtime Architecture
 
-The `modkit` runtime powers the application lifecycle by executing a deterministic sequence of initialization and startup phases for registered modules. 
+The toolkit runtime powers the application lifecycle by executing a deterministic sequence of initialization and startup phases for registered modules. 
 
 ## Lifecycle Phases
 
