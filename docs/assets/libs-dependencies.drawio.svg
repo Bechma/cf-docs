@@ -8,13 +8,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 898px; height: 1px; padding-top: 13px; margin-left: 191px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 16px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; overflow-wrap: normal;">
-                                ModKit Libraries — Dependency Graph
+                                Toolkit Libraries — Dependency Graph
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="640" y="18" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="16px" text-anchor="middle" font-weight="bold">
-                    ModKit Libraries — Dependency Graph
+                    Toolkit Libraries — Dependency Graph
                 </text>
             </switch>
         </g>
@@ -25,13 +25,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 54px; margin-left: 588px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit
+                                cf-gears-toolkit
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="670" y="58" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle" font-weight="bold">
-                    cf-modkit
+                    cf-gears-toolkit
                 </text>
             </switch>
         </g>
@@ -42,13 +42,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 1px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-macros
+                                cf-gears-toolkit-macros
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="83" y="162" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-macros
+                    cf-gears-toolkit-macros
                 </text>
             </switch>
         </g>
@@ -59,13 +59,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 181px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-errors
+                                cf-gears-toolkit-errors
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="263" y="162" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-errors
+                    cf-gears-toolkit-errors
                 </text>
             </switch>
         </g>
@@ -76,13 +76,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 361px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-odata
+                                cf-gears-toolkit-odata
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="443" y="162" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-odata
+                    cf-gears-toolkit-odata
                 </text>
             </switch>
         </g>
@@ -93,13 +93,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 541px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-sdk
+                                cf-gears-toolkit-sdk
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="623" y="162" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-sdk
+                    cf-gears-toolkit-sdk
                 </text>
             </switch>
         </g>
@@ -110,13 +110,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 721px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-db
+                                cf-gears-toolkit-db
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="803" y="162" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-db
+                    cf-gears-toolkit-db
                 </text>
             </switch>
         </g>
@@ -127,13 +127,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 158px; margin-left: 901px;">
                         <div data-drawio-colors="color: #333333; " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(51, 51, 51); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-utils
+                                cf-gears-toolkit-utils
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="983" y="162" fill="#333333" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-utils
+                    cf-gears-toolkit-utils
                 </text>
             </switch>
         </g>
@@ -161,13 +161,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 273px; margin-left: 181px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-errors-macro
+                                cf-gears-toolkit-errors-macro
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="263" y="277" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-errors-macro
+                    cf-gears-toolkit-errors-macro
                 </text>
             </switch>
         </g>
@@ -178,13 +178,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 273px; margin-left: 361px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-odata-macros
+                                cf-gears-toolkit-odata-macros
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="443" y="277" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-odata-macros
+                    cf-gears-toolkit-odata-macros
                 </text>
             </switch>
         </g>
@@ -195,13 +195,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 273px; margin-left: 541px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-security
+                                cf-gears-toolkit-security
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="623" y="277" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-security
+                    cf-gears-toolkit-security
                 </text>
             </switch>
         </g>
@@ -212,13 +212,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 273px; margin-left: 721px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-db-macros
+                                cf-gears-toolkit-db-macros
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="803" y="277" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-db-macros
+                    cf-gears-toolkit-db-macros
                 </text>
             </switch>
         </g>
@@ -231,13 +231,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 351px; margin-left: 901px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-auth
+                                cf-gears-toolkit-auth
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="983" y="355" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-auth
+                    cf-gears-toolkit-auth
                 </text>
             </switch>
         </g>
@@ -248,13 +248,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 508px; margin-left: 541px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-transport-grpc
+                                cf-gears-toolkit-transport-grpc
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="623" y="512" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-transport-grpc
+                    cf-gears-toolkit-transport-grpc
                 </text>
             </switch>
         </g>
@@ -265,13 +265,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 398px; margin-left: 181px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-canonical-errors
+                                cf-gears-toolkit-canonical-errors
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="263" y="402" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-canonical-errors
+                    cf-gears-toolkit-canonical-errors
                 </text>
             </switch>
         </g>
@@ -282,13 +282,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 398px; margin-left: 1081px;">
                         <div data-drawio-colors="color: #333333; " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(51, 51, 51); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-node-info
+                                cf-gears-toolkit-node-info
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="1163" y="402" fill="#333333" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-node-info
+                    cf-gears-toolkit-node-info
                 </text>
             </switch>
         </g>
@@ -299,13 +299,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 461px; margin-left: 901px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-http
+                                cf-gears-toolkit-http
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="983" y="465" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-http
+                    cf-gears-toolkit-http
                 </text>
             </switch>
         </g>
@@ -316,13 +316,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 163px; height: 1px; padding-top: 508px; margin-left: 181px;">
                         <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                cf-modkit-canonical-errors-macro
+                                cf-gears-toolkit-canonical-errors-macro
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="263" y="512" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    cf-modkit-canonical-errors-...
+                    cf-gears-toolkit-canonical-errors-...
                 </text>
             </switch>
         </g>
