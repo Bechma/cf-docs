@@ -4,7 +4,7 @@ Gears uses [SeaORM](https://www.sea-ql.org/SeaORM/) for data access, wrapped in 
 
 ## SecureConn
 
-All database access goes through `SecureConn`, a scoped connection that automatically injects `WHERE` clauses based on the caller's `AccessScope`. There is no way to bypass scoping -- unscoped queries don't compile.
+All database access goes through `SecureConn`, a scoped connection that automatically injects `WHERE` clauses based on the caller's [`AccessScope`](/toolkit/06_authn_authz_secure_orm). There is no way to bypass scoping -- unscoped queries don't compile.
 
 ```rust
 let conn = db.sea_secure();

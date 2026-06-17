@@ -37,7 +37,7 @@ pub trait MyGearApi: Send + Sync {
 
 ## ClientHub integration
 
-The module registers its SDK implementation during `init()`, and consumers resolve it through `ClientHub`:
+The module registers its SDK implementation during `init()`, and consumers resolve it through [ClientHub](/toolkit/03_clienthub_and_plugins):
 
 ```rust
 // Provider (in init)
