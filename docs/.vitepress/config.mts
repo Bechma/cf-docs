@@ -26,45 +26,9 @@ const libraries = {
   text: "Libraries",
   collapsed: false,
   items: [
-    {
-      text: "toolkit",
-      link: "/reference/toolkit",
-      items: [
-        { text: "toolkit-macros", link: "/reference/toolkit/toolkit-macros" },
-        { text: "toolkit-sdk", link: "/reference/toolkit/toolkit-sdk" },
-      ],
-    },
-    { text: "toolkit-auth", link: "/reference/toolkit/toolkit-auth" },
-    { text: "toolkit-security", link: "/reference/toolkit/toolkit-security" },
-    {
-      text: "toolkit-canonical-errors",
-      link: "/reference/toolkit/toolkit-canonical-errors",
-      items: [
-        { text: "toolkit-canonical-errors-macro", link: "/reference/toolkit/toolkit-canonical-errors-macro" },
-      ],
-    },
-    {
-      text: "toolkit-db",
-      link: "/reference/toolkit/toolkit-db",
-      items: [
-        { text: "toolkit-db-macros", link: "/reference/toolkit/toolkit-db-macros" },
-      ]
-    },
-    {
-      text: "toolkit-odata",
-      link: "/reference/toolkit/toolkit-odata",
-      items: [
-        { text: "toolkit-odata-macros", link: "/reference/toolkit/toolkit-odata-macros" },
-      ]
-    },
-    { text: "toolkit-http", link: "/reference/toolkit/toolkit-http" },
-    { text: "toolkit-transport-grpc", link: "/reference/toolkit/toolkit-transport-grpc" },
-    { text: "toolkit-node-info", link: "/reference/toolkit/toolkit-node-info" },
-    {
-      text: "system-sdks", link: "/reference/system-sdks", items: [
-        { text: "system-sdk-directory", link: "/reference/system-sdks/system-sdk-directory" },
-      ]
-    },
+    { text: "Toolkit Libraries", link: "/reference/toolkit" },
+    // Individual library pages are TODO stubs for now.
+    // Re-add them here once they have real content.
   ]
 };
 
@@ -111,13 +75,6 @@ export default defineConfig({
             { text: "Database", link: "/intro/core/database" },
             { text: "OData", link: "/intro/core/odata" },
             { text: "Rest/gRPC host", link: "/intro/core/rest-grpc-host" },
-          ]
-        },
-        {
-          text: "Tutorials",
-          collapsed: false,
-          items: [
-            { text: "Notes app", link: "/intro/tutorials/notes-app" },
           ]
         },
         {
