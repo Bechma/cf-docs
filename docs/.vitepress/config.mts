@@ -84,12 +84,6 @@ export default defineConfig({
       { text: "Docs", link: "/intro/introduction", activeMatch: '/intro/' },
       { text: "Toolkit", link: "/toolkit/", activeMatch: '/toolkit/' },
       { text: "Reference", link: "/reference/api-reference", activeMatch: '/reference/' },
-      {
-        text: "Examples", items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "API examples", link: "/api-examples" }
-        ],
-      },
     ],
 
     // https://vitepress.dev/reference/default-theme-sidebar
