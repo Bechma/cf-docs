@@ -43,6 +43,19 @@ Build settings live under `[apps.<app>.<env>.build]`.
 - `profile`: build profile, either `debug`, `release`, or a custom profile name
 - `clean`: when set, removes `Cargo.lock` before building
 
+### CLI usage
+
+```bash
+cargo gears build                # build with manifest defaults
+cargo gears build -r             # release mode (overrides manifest profile)
+cargo gears build --fips --otel  # enable FIPS and OpenTelemetry features
+cargo gears build --clean        # remove Cargo.lock before building
+cargo gears build --dry-run      # print resolved model without building
+cargo gears build --name custom  # override the generated binary name
+```
+
+CLI flags (`-r`/`--release`, `--fips`, `--otel`, `--clean`) override the corresponding manifest settings when provided.
+
 # Lint Policy
 
 Lint settings live under `[apps.<app>.<env>.lint]`.
@@ -53,6 +66,19 @@ Lint settings live under `[apps.<app>.<env>.lint]`.
 - `feature-set-test`: enables feature-set validation, default `true`
 - `dylint`: optional Dylint settings with `enabled` and `skip`
 
+### CLI usage
+
+```bash
+cargo gears lint              # run suites enabled in the manifest
+cargo gears lint --all        # run all available lint suites
+cargo gears lint --fmt        # formatting check only (cargo fmt --check)
+cargo gears lint --clippy     # Clippy only (follows Cargo.toml exceptions)
+cargo gears lint --dylint     # Gears-specific Dylint rules only
+cargo gears lint --strict     # turn Clippy warnings into errors (useful for CI)
+```
+
+When no suite flag is given, `cargo gears lint` runs the suites enabled in the manifest lint policy. Individual flags (`--fmt`, `--clippy`, `--dylint`) select specific suites regardless of the manifest.
+
 # Run Policy
 
 Run settings live under `[apps.<app>.<env>.run]`.
@@ -62,6 +88,18 @@ Run settings live under `[apps.<app>.<env>.run]`.
 - `watch.exclude`: removes paths from the effective watch set
 - `fips`: enables FIPS-related build features, default `false`
 - `otel`: enables OpenTelemetry-related build features, default `false`
+
+### CLI usage
+
+```bash
+cargo gears run                  # run with manifest defaults (watch enabled)
+cargo gears run --no-watch       # disable file watching
+cargo gears run -r               # run in release mode
+cargo gears run --fips --otel    # enable FIPS and OpenTelemetry
+cargo gears run --app myapp --env staging  # select a specific app/environment
+```
+
+Boolean flags use `--flag`/`--no-flag` pairs (e.g. `--watch`/`--no-watch`, `--otel`/`--no-otel`) to explicitly override manifest settings.
 
 # Test Policy
 
@@ -78,3 +116,23 @@ Each `feature-set` entry supports these modes:
 - `all-features`
 - `no-default-features`
 - `features`, with an explicit `features = ["..."]` list
+
+### CLI usage
+
+```bash
+cargo gears test                       # run with manifest defaults (nextest)
+cargo gears test --runner cargo        # use cargo test instead of nextest
+cargo gears test --module my-module    # test a single module only
+cargo gears test --coverage            # run with cargo-llvm-cov coverage
+```
+
+# Deploy
+
+`cargo gears deploy` builds a Docker image for the generated server. It is not configured through the manifest -- all options are passed via CLI flags.
+
+```bash
+cargo gears deploy -c config/prod.yml -t myapp:latest
+cargo gears deploy -c config/prod.yml --debug            # debug build
+cargo gears deploy --dockerfile custom/Dockerfile        # custom Dockerfile
+cargo gears deploy --args BUILD_ARG=value                # Dockerfile ARG override
+```
