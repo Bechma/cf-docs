@@ -8,14 +8,14 @@ All Toolkit crates are prefixed with `cf-gears-toolkit` and designed to work tog
 
 | Group | Crates | Purpose |
 |---|---|---|
-| **Module system** | [toolkit](./modkit/modkit-macros), [toolkit-macros](./modkit/modkit-macros), [toolkit-sdk](./modkit/modkit-sdk) | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
-| **Data & storage** | [toolkit-db](./modkit/modkit-db), [toolkit-db-macros](./modkit/modkit-db-macros) | SeaORM integration, `SecureConn`, tenant-scoped queries, migrations |
-| **Networking** | [toolkit-http](./modkit/modkit-http), [toolkit-transport-grpc](./modkit/modkit-transport-grpc) | HTTP client with retries and SSRF protection, gRPC security context propagation |
-| **Errors** | [toolkit-canonical-errors](./modkit/modkit-canonical-errors), [toolkit-canonical-errors-macro](./modkit/modkit-errors-macro) | RFC 9457 Problem Details, canonical error types (AIP-193), `resource_error!` macro |
-| **Query & data access** | [toolkit-odata](./modkit/modkit-odata), [toolkit-odata-macros](./modkit/modkit-odata-macros) | OData filter/pagination primitives and proc-macros |
-| **Security** | [toolkit-auth](./modkit/modkit-auth), [toolkit-security](./modkit/modkit-security) | JWT/JWKS validation, OAuth2 client-credentials, `SecurityContext`, `AccessScope` |
-| **Type system** | [toolkit-gts](./modkit/modkit-macros), [toolkit-gts-macros](./modkit/modkit-macros) | Global Type System (GTS) for schema-validated extensibility |
-| **Platform** | [toolkit-node-info](./modkit/modkit-node-info) | System information (hardware UUID, OS, CPU, GPU, network) |
+| **Module system** | [toolkit](./toolkit/toolkit-macros), [toolkit-macros](./toolkit/toolkit-macros), [toolkit-sdk](./toolkit/toolkit-sdk) | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
+| **Data & storage** | [toolkit-db](./toolkit/toolkit-db), [toolkit-db-macros](./toolkit/toolkit-db-macros) | SeaORM integration, `SecureConn`, tenant-scoped queries, migrations |
+| **Networking** | [toolkit-http](./toolkit/toolkit-http), [toolkit-transport-grpc](./toolkit/toolkit-transport-grpc) | HTTP client with retries and SSRF protection, gRPC security context propagation |
+| **Errors** | [toolkit-canonical-errors](./toolkit/toolkit-canonical-errors), [toolkit-canonical-errors-macro](./toolkit/toolkit-canonical-errors-macro) | RFC 9457 Problem Details, canonical error types (AIP-193), `resource_error!` macro |
+| **Query & data access** | [toolkit-odata](./toolkit/toolkit-odata), [toolkit-odata-macros](./toolkit/toolkit-odata-macros) | OData filter/pagination primitives and proc-macros |
+| **Security** | [toolkit-auth](./toolkit/toolkit-auth), [toolkit-security](./toolkit/toolkit-security) | JWT/JWKS validation, OAuth2 client-credentials, `SecurityContext`, `AccessScope` |
+| **Type system** | [toolkit-gts](./toolkit/toolkit-gts), [toolkit-gts-macros](./toolkit/toolkit-gts-macros) | Global Type System (GTS) for schema-validated extensibility |
+| **Platform** | [toolkit-node-info](./toolkit/toolkit-node-info) | System information (hardware UUID, OS, CPU, GPU, network) |
 
 For the full library reference with detailed descriptions, see the [API reference](/reference/api-reference).
 

@@ -27,40 +27,39 @@ const libraries = {
   collapsed: false,
   items: [
     {
-      text: "modkit",
-      link: "/reference/modkit",
+      text: "toolkit",
+      link: "/reference/toolkit",
       items: [
-        { text: "modkit-macros", link: "/reference/modkit/modkit-macros" },
-        { text: "modkit-sdk", link: "/reference/modkit/modkit-sdk" },
+        { text: "toolkit-macros", link: "/reference/toolkit/toolkit-macros" },
+        { text: "toolkit-sdk", link: "/reference/toolkit/toolkit-sdk" },
       ],
     },
-    { text: "modkit-auth", link: "/reference/modkit/modkit-auth" },
-    { text: "modkit-security", link: "/reference/modkit/modkit-security" },
+    { text: "toolkit-auth", link: "/reference/toolkit/toolkit-auth" },
+    { text: "toolkit-security", link: "/reference/toolkit/toolkit-security" },
     {
-      text: "modkit-errors",
-      link: "/reference/modkit/modkit-errors",
+      text: "toolkit-canonical-errors",
+      link: "/reference/toolkit/toolkit-canonical-errors",
       items: [
-        { text: "modkit-errors-macro", link: "/reference/modkit/modkit-errors-macro" },
-        { text: "modkit-canonical-errors", link: "/reference/modkit/modkit-canonical-errors" },
+        { text: "toolkit-canonical-errors-macro", link: "/reference/toolkit/toolkit-canonical-errors-macro" },
       ],
     },
     {
-      text: "modkit-db",
-      link: "/reference/modkit/modkit-db",
+      text: "toolkit-db",
+      link: "/reference/toolkit/toolkit-db",
       items: [
-        { text: "modkit-db-macros", link: "/reference/modkit/modkit-db-macros" },
+        { text: "toolkit-db-macros", link: "/reference/toolkit/toolkit-db-macros" },
       ]
     },
     {
-      text: "modkit-odata",
-      link: "/reference/modkit/modkit-odata",
+      text: "toolkit-odata",
+      link: "/reference/toolkit/toolkit-odata",
       items: [
-        { text: "modkit-odata-macros", link: "/reference/modkit/modkit-odata-macros" },
+        { text: "toolkit-odata-macros", link: "/reference/toolkit/toolkit-odata-macros" },
       ]
     },
-    { text: "modkit-http", link: "/reference/modkit/modkit-http" },
-    { text: "modkit-transport-grpc", link: "/reference/modkit/modkit-transport-grpc" },
-    { text: "modkit-node-info", link: "/reference/modkit/modkit-node-info" },
+    { text: "toolkit-http", link: "/reference/toolkit/toolkit-http" },
+    { text: "toolkit-transport-grpc", link: "/reference/toolkit/toolkit-transport-grpc" },
+    { text: "toolkit-node-info", link: "/reference/toolkit/toolkit-node-info" },
     {
       text: "system-sdks", link: "/reference/system-sdks", items: [
         { text: "system-sdk-directory", link: "/reference/system-sdks/system-sdk-directory" },
