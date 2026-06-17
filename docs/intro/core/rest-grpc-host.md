@@ -42,7 +42,7 @@ Every route must declare its auth posture before registration:
 .error_404(openapi)        // or individual codes
 ```
 
-All error responses use [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Details.
+All error responses use [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Details. See [Errors (RFC 9457)](/toolkit/05_errors_rfc9457) for the full error handling guide.
 
 ## Handler conventions
 

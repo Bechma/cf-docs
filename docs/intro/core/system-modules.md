@@ -40,3 +40,7 @@ cargo gears ls modules           # all modules
 cargo gears ls modules --system  # system modules only
 cargo gears ls modules --local   # workspace modules only
 ```
+
+::: tip
+For details on ClientHub, plugins, and inter-module communication patterns, see [ClientHub & Plugins](/toolkit/03_clienthub_and_plugins). For authorization patterns with `PolicyEnforcer`, see [AuthN/AuthZ & Secure ORM](/toolkit/06_authn_authz_secure_orm).
+:::

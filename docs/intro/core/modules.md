@@ -54,7 +54,7 @@ The runtime discovers registered gears via inventory and wires them automaticall
 
 ## Capabilities
 
-Capabilities determine which lifecycle phases a module participates in:
+Capabilities determine which [lifecycle phases](/intro/life-cycle) a module participates in:
 
 | Capability | Purpose |
 |---|---|
@@ -99,5 +99,5 @@ modules = [
 Use `cargo gears ls modules` to list available modules in the workspace.
 
 ::: tip
-For the full toolkit API and architectural patterns, see the [Toolkit](/toolkit/) documentation.
+For the full gear architecture overview, see [Gear Overview](/toolkit/00_gear_overview). For the directory layout and SDK pattern in detail, see [Gear Layout & SDK Pattern](/toolkit/02_gear_layout_and_sdk_pattern).
 :::
