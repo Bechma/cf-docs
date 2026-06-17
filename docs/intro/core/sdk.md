@@ -53,7 +53,7 @@ The same trait is implemented by both in-process adapters (direct function calls
 
 ## WithSecurityContext
 
-`modkit-sdk` provides `WithSecurityContext` for zero-allocation security context scoping on any client, and a typed `QueryBuilder` with compile-time field checking:
+`toolkit-sdk` provides `WithSecurityContext` for zero-allocation security context scoping on any client, and a typed `QueryBuilder` with compile-time field checking:
 
 ```rust
 let items = api
