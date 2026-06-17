@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- Rust -> https://rust-lang.org/tools/install/
-- Protobuf -> https://protobuf.dev/installation/
+- [Rust](https://rust-lang.org/tools/install/)
+- [Protobuf](https://protobuf.dev/installation/)
 
 ## CLI installation
 

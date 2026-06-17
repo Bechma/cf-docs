@@ -13,6 +13,6 @@ Among these components are:
 - [Coverage with llvm-cov](https://github.com/taiki-e/cargo-llvm-cov) for code coverage
 - FIPS compliance with [aws-lc-rs](https://github.com/aws/aws-lc-rs)
 
-And a lot of other open-source tools and libraries that when combined make Gears a powerful and building platform.
+And a lot of other open-source tools and libraries that when combined make Gears a powerful building platform.
 
 In order to ease and centralize the use of these tools, we provide a CLI tool called `gears` that eases all software development tasks related to Gears.

@@ -74,6 +74,8 @@ export default defineConfig({
   title: "Gears documentation site",
   description: "Gears docs, tutorials and how-to guides",
   base: "/gears-webdocs/",
+  // TODO: remove once all TODO placeholder pages are filled and toolkit
+  // pages are always present (they are fetched at build time).
   ignoreDeadLinks: true,
   themeConfig: {
     siteTitle: "Gears Docs",
@@ -153,7 +155,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/Bechma/cf-docs/edit/dev/docs/:path'
+      pattern: 'https://github.com/Bechma/gears-webdocs/edit/main/docs/:path'
     },
 
     lastUpdated: {
