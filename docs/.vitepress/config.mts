@@ -26,46 +26,9 @@ const libraries = {
   text: "Libraries",
   collapsed: false,
   items: [
-    {
-      text: "modkit",
-      link: "/reference/modkit",
-      items: [
-        { text: "modkit-macros", link: "/reference/modkit/modkit-macros" },
-        { text: "modkit-sdk", link: "/reference/modkit/modkit-sdk" },
-      ],
-    },
-    { text: "modkit-auth", link: "/reference/modkit/modkit-auth" },
-    { text: "modkit-security", link: "/reference/modkit/modkit-security" },
-    {
-      text: "modkit-errors",
-      link: "/reference/modkit/modkit-errors",
-      items: [
-        { text: "modkit-errors-macro", link: "/reference/modkit/modkit-errors-macro" },
-        { text: "modkit-canonical-errors", link: "/reference/modkit/modkit-canonical-errors" },
-      ],
-    },
-    {
-      text: "modkit-db",
-      link: "/reference/modkit/modkit-db",
-      items: [
-        { text: "modkit-db-macros", link: "/reference/modkit/modkit-db-macros" },
-      ]
-    },
-    {
-      text: "modkit-odata",
-      link: "/reference/modkit/modkit-odata",
-      items: [
-        { text: "modkit-odata-macros", link: "/reference/modkit/modkit-odata-macros" },
-      ]
-    },
-    { text: "modkit-http", link: "/reference/modkit/modkit-http" },
-    { text: "modkit-transport-grpc", link: "/reference/modkit/modkit-transport-grpc" },
-    { text: "modkit-node-info", link: "/reference/modkit/modkit-node-info" },
-    {
-      text: "system-sdks", link: "/reference/system-sdks", items: [
-        { text: "system-sdk-directory", link: "/reference/system-sdks/system-sdk-directory" },
-      ]
-    },
+    { text: "Toolkit Libraries", link: "/reference/toolkit" },
+    // Individual library pages are TODO stubs for now.
+    // Re-add them here once they have real content.
   ]
 };
 
@@ -74,6 +37,8 @@ export default defineConfig({
   title: "Gears documentation site",
   description: "Gears docs, tutorials and how-to guides",
   base: "/gears-webdocs/",
+  // TODO: remove once all TODO placeholder pages are filled and toolkit
+  // pages are always present (they are fetched at build time).
   ignoreDeadLinks: true,
   themeConfig: {
     siteTitle: "Gears Docs",
@@ -82,12 +47,6 @@ export default defineConfig({
       { text: "Docs", link: "/intro/introduction", activeMatch: '/intro/' },
       { text: "Toolkit", link: "/toolkit/", activeMatch: '/toolkit/' },
       { text: "Reference", link: "/reference/api-reference", activeMatch: '/reference/' },
-      {
-        text: "Examples", items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "API examples", link: "/api-examples" }
-        ],
-      },
     ],
 
     // https://vitepress.dev/reference/default-theme-sidebar
@@ -119,13 +78,6 @@ export default defineConfig({
           ]
         },
         {
-          text: "Tutorials",
-          collapsed: false,
-          items: [
-            { text: "Notes app", link: "/intro/tutorials/notes-app" },
-          ]
-        },
-        {
           text: "Resources",
           collapsed: false,
           items: [
@@ -153,7 +105,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/Bechma/cf-docs/edit/dev/docs/:path'
+      pattern: 'https://github.com/constructorfabric/gears-webdocs/edit/main/docs/:path'
     },
 
     lastUpdated: {
@@ -165,7 +117,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/Bechma" },
+      { icon: "github", link: "https://github.com/constructorfabric" },
     ]
   }
 })
