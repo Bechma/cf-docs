@@ -26,7 +26,7 @@ bookmarks-app/
   Gears.toml            # Gears orchestration manifest
   Dockerfile
   config/
-    quickstart.yml      # Default runtime config
+    bookmarks.yml       # Runtime config
   modules/
     hello-world/        # Starter module
 ```
@@ -92,11 +92,11 @@ For a deeper look at this layout, see [Modules](/intro/core/modules) and [Gear L
 
 ## 3. Generate a database config
 
-The default `quickstart.yml` has no database section. Generate one:
+The default `quickstart.yml` has no database section. Replace it with a database-ready config:
 
 ```bash
 rm config/quickstart.yml
-cargo gears generate config --template db --name quickstart
+cargo gears generate config --template db --name bookmarks
 ```
 
 The generated config includes a PostgreSQL connection. Update the `dbname` from `app` to `bookmarks`:
@@ -141,8 +141,8 @@ First, update `Gears.toml` to replace the `hello-world` starter module with `boo
 [workspace]
 version = 1
 
-[apps.quickstart.dev]
-config = "quickstart.yml"
+[apps.bookmarks.dev]
+config = "bookmarks.yml"
 modules = [
     { source = "remote", name = "types-registry", package = "cf-gears-types-registry", version = "0.1.22" },
     { source = "remote", name = "authn-resolver", package = "cf-gears-authn-resolver", version = "0.2.16" },
@@ -160,8 +160,8 @@ Any gear with `rest` capability requires `api-gateway` (the HTTP gateway that ow
 Then register the module in the runtime config and wire it to the database:
 
 ```bash
-cargo gears config mod add bookmarks -c ./config/quickstart.yml
-cargo gears config mod db add bookmarks -c ./config/quickstart.yml --server main
+cargo gears config mod add bookmarks -c ./config/bookmarks.yml
+cargo gears config mod db add bookmarks -c ./config/bookmarks.yml --server main
 ```
 
 The first command registers the module in the runtime config. The second wires it to the `main` database server so it receives a connection during startup.
@@ -1765,7 +1765,7 @@ docker run -d --name gears-pg \
   postgres:17
 ```
 
-This starts a PostgreSQL 17 container with the `bookmarks` database pre-created. The `DB_PASSWORD` environment variable matches what `quickstart.yml` references via `${DB_PASSWORD}`.
+This starts a PostgreSQL 17 container with the `bookmarks` database pre-created. The `DB_PASSWORD` environment variable matches what `bookmarks.yml` references via `${DB_PASSWORD}`.
 
 ## 11. Build and run
 
@@ -1812,7 +1812,7 @@ See the [Manifest](/intro/manifest#lint-policy) page for lint and test configura
 ```
 bookmarks-app/
   Gears.toml
-  config/quickstart.yml
+  config/bookmarks.yml
   modules/
     hello-world/              # Starter module (can be removed)
     bookmarks/
