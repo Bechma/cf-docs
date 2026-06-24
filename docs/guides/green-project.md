@@ -130,7 +130,7 @@ version = 1
 [apps.quickstart.dev]
 config = "quickstart.yml"
 modules = [
-    { source = "local", name = "bookmarks" },
+    { source = "local", name = "bookmarks", features = ["postgres"] },
 ]
 ```
 
@@ -142,6 +142,10 @@ cargo gears config mod db add bookmarks -c ./config/quickstart.yml --server main
 ```
 
 The first command registers the module in the runtime config. The second wires it to the `main` database server so it receives a connection during startup.
+
+::: tip
+Database backend features (like `postgres`) are declared in `Gears.toml` on the module ref, not in the runtime config. See the `features = ["postgres"]` in the modules list above.
+:::
 
 ## 5. Transform the SDK layer
 
