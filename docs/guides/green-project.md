@@ -99,7 +99,7 @@ rm config/quickstart.yml
 cargo gears generate config --template db --name quickstart
 ```
 
-The generated config includes a PostgreSQL connection:
+The generated config includes a PostgreSQL connection. Update the `dbname` from `app` to `bookmarks`:
 
 ```yaml
 database:
@@ -110,8 +110,22 @@ database:
       port: 5432
       user: postgres
       password: ${DB_PASSWORD}
-      dbname: app
+      dbname: bookmarks
 ```
+
+Next, add the `api-gateway` gear configuration under the `gears:` section. The gateway needs a bind address, and for local development we disable authentication:
+
+```yaml
+gears:
+  api-gateway:
+    config:
+      bind_addr: "0.0.0.0:8080"
+      auth_disabled: true
+```
+
+::: warning
+Never set `auth_disabled: true` in production. This is a convenience for local development only. Production deployments should use `authn-resolver` to enforce authentication.
+:::
 
 Set the password for your local database:
 
@@ -121,7 +135,7 @@ export DB_PASSWORD=your_password
 
 ## 4. Register the module
 
-First, update `Gears.toml` to replace the `hello-world` starter module with `bookmarks`:
+First, update `Gears.toml` to replace the `hello-world` starter module with `bookmarks`. The bookmarks module needs REST endpoints, which requires the `api-gateway` system gear and its dependencies:
 
 ```toml
 [workspace]
@@ -130,9 +144,18 @@ version = 1
 [apps.quickstart.dev]
 config = "quickstart.yml"
 modules = [
+    { source = "remote", name = "types-registry", package = "cf-gears-types-registry", version = "0.1.22" },
+    { source = "remote", name = "authn-resolver", package = "cf-gears-authn-resolver", version = "0.2.16" },
+    { source = "remote", name = "grpc-hub", package = "cf-gears-grpc-hub", version = "0.2.6" },
+    { source = "remote", name = "api-gateway", package = "cf-gears-api-gateway", version = "0.2.7" },
+
     { source = "local", name = "bookmarks", features = ["postgres"] },
 ]
 ```
+
+::: info
+Any gear with `rest` capability requires `api-gateway` (the HTTP gateway that owns the server and mounts routes). The `api-gateway` in turn depends on `grpc-hub` and `authn-resolver`, which depends on `types-registry`. All four must be listed — order them so dependencies come before dependents.
+:::
 
 Then register the module in the runtime config and wire it to the database:
 
@@ -900,7 +923,73 @@ CREATE INDEX idx_bookmarks_title ON bookmarks(title);
 Always add an index on `tenant_id` — the secure ORM injects tenant filters on every query.
 :::
 
-### 7.3 Mapper (`modules/bookmarks/src/infra/storage/mapper.rs`)
+### 7.3 Seed data migration
+
+Add a second migration to populate the table with sample bookmarks so the API returns data immediately. Create `modules/bookmarks/src/infra/storage/migrations/m20260111_000002_seed.rs`:
+
+```rust
+use sea_orm_migration::prelude::*;
+use sea_orm_migration::sea_orm::ConnectionTrait;
+
+#[derive(DeriveMigrationName)]
+pub struct Migration;
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let conn = manager.get_connection();
+        let sql = r"
+INSERT INTO bookmarks (id, tenant_id, url, title, description, created_at, updated_at) VALUES
+  ('a1b2c3d4-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000',
+   'https://www.rust-lang.org', 'The Rust Programming Language',
+   'Official Rust website', NOW(), NOW()),
+  ('a1b2c3d4-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000',
+   'https://doc.rust-lang.org/book/', 'The Rust Book',
+   'The official Rust programming guide', NOW(), NOW()),
+  ('a1b2c3d4-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000000',
+   'https://crates.io', 'crates.io',
+   'The Rust community''s crate registry', NOW(), NOW())
+ON CONFLICT (id) DO NOTHING;
+        ";
+        conn.execute_unprepared(sql).await?;
+        Ok(())
+    }
+
+    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let conn = manager.get_connection();
+        let sql = "DELETE FROM bookmarks WHERE id IN (
+            'a1b2c3d4-0000-0000-0000-000000000001',
+            'a1b2c3d4-0000-0000-0000-000000000002',
+            'a1b2c3d4-0000-0000-0000-000000000003'
+        );";
+        conn.execute_unprepared(sql).await?;
+        Ok(())
+    }
+}
+```
+
+Register the new migration in `modules/bookmarks/src/infra/storage/migrations/mod.rs`:
+
+```rust
+use sea_orm_migration::prelude::*;
+
+mod m20260111_000001_initial;
+mod m20260111_000002_seed;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -> Vec<Box<dyn MigrationTrait>> {
+        vec![
+            Box::new(m20260111_000001_initial::Migration),
+            Box::new(m20260111_000002_seed::Migration),
+        ]
+    }
+}
+```
+
+### 7.4 Mapper (`modules/bookmarks/src/infra/storage/mapper.rs`)
 
 Update the field mappings to match the new model:
 
@@ -939,7 +1028,7 @@ impl From<&entity::bookmark::Model> for Bookmark {
 }
 ```
 
-### 7.4 OData mapper (`modules/bookmarks/src/infra/storage/odata_mapper.rs`)
+### 7.5 OData mapper (`modules/bookmarks/src/infra/storage/odata_mapper.rs`)
 
 Update filter field mappings. Note the new `Url` and `Title` fields replacing `Name`:
 
@@ -983,7 +1072,7 @@ impl ODataFieldMapping<BookmarkFilterField> for BookmarkODataMapper {
 }
 ```
 
-### 7.5 Repository implementation
+### 7.6 Repository implementation
 
 Rename the file:
 
@@ -1663,7 +1752,22 @@ pub(crate) mod domain;
 pub(crate) mod infra;
 ```
 
-## 10. Build and run
+## 10. Set up a local database
+
+The easiest way to run PostgreSQL locally is with Docker:
+
+```bash
+export DB_PASSWORD=changeme
+docker run -d --name gears-pg \
+  -e POSTGRES_PASSWORD=$DB_PASSWORD \
+  -e POSTGRES_DB=bookmarks \
+  -p 5432:5432 \
+  postgres:17
+```
+
+This starts a PostgreSQL 17 container with the `bookmarks` database pre-created. The `DB_PASSWORD` environment variable matches what `quickstart.yml` references via `${DB_PASSWORD}`.
+
+## 11. Build and run
 
 ```bash
 cargo gears build
@@ -1672,28 +1776,29 @@ cargo gears run
 
 The runtime will:
 
-1. Run database migrations (creating the `bookmarks` table)
-2. Register REST routes under `/bookmarks/v1/bookmarks`
-3. Start the HTTP server
+1. Discover and wire all gears (system gears first, then your local bookmarks gear)
+2. Run database migrations (creating the `bookmarks` table and inserting seed data)
+3. Register REST routes under `/bookmarks/v1/bookmarks`
+4. Start the HTTP server on `0.0.0.0:8080`
 
-## 11. Test with curl
+## 12. Test with curl
 
 ```bash
-# List bookmarks (empty at first)
-curl "http://localhost:8080/bookmarks/v1/bookmarks"
+# List bookmarks (returns the seed data)
+curl -s "http://localhost:8080/bookmarks/v1/bookmarks" | jq .
 
 # List with OData filter
-curl "http://localhost:8080/bookmarks/v1/bookmarks?\$filter=title eq 'Rust'&\$top=10"
+curl -s "http://localhost:8080/bookmarks/v1/bookmarks?\$filter=title eq 'The Rust Book'" | jq .
 
-# Get a bookmark by ID (replace <id> with a real UUID)
-curl http://localhost:8080/bookmarks/v1/bookmarks/<id>
+# Get a bookmark by ID
+curl -s "http://localhost:8080/bookmarks/v1/bookmarks/a1b2c3d4-0000-0000-0000-000000000001" | jq .
 ```
 
 ::: tip
-Since we only have GET and LIST endpoints, you will need to insert test data directly into the database to see results. The [Brown Project](./brown-project) guide adds create, update, and delete endpoints.
+This guide only covers GET and LIST endpoints. The [Brown Project](./brown-project) guide adds create, update, and delete endpoints.
 :::
 
-## 12. Run lint and tests
+## 13. Run lint and tests
 
 ```bash
 cargo gears lint              # formatting + Clippy
