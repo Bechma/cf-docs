@@ -121,6 +121,21 @@ export DB_PASSWORD=your_password
 
 ## 4. Register the module
 
+First, update `Gears.toml` to replace the `hello-world` starter module with `bookmarks`:
+
+```toml
+[workspace]
+version = 1
+
+[apps.quickstart.dev]
+config = "quickstart.yml"
+modules = [
+    { source = "local", name = "bookmarks" },
+]
+```
+
+Then register the module in the runtime config and wire it to the database:
+
 ```bash
 cargo gears config mod add bookmarks -c ./config/quickstart.yml
 cargo gears config mod db add bookmarks -c ./config/quickstart.yml --server main
