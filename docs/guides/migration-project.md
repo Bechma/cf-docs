@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Migration Project: Go to Gears
 
 Migrate a small Go REST API to the Gears framework. By the end of this guide you will understand how Go patterns map to Gears' DDD-light architecture, and have a clear strategy for migrating real services.
