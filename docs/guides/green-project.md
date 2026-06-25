@@ -1812,7 +1812,7 @@ See the [Manifest](/intro/manifest#lint-policy) page for lint and test configura
 
 ## What you've built
 
-```
+```text
 bookmarks-app/
   Gears.toml
   config/bookmarks.yml

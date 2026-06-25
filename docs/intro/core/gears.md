@@ -67,7 +67,7 @@ Capabilities determine which [lifecycle phases](/intro/life-cycle) a gear partic
 
 ```bash
 cargo gears generate gear --template background-worker
-cargo gears config mod add background-worker -c ./config/quickstart.yml
+cargo gears config gear add background-worker -c ./config/quickstart.yml
 ```
 
 The CLI scaffolds the directory structure and registers the gear in the workspace. Templates provide pre-built starting points for common patterns.
