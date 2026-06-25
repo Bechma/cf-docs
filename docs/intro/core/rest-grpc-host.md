@@ -1,6 +1,6 @@
 # REST / gRPC Host
 
-Gears modules don't own the HTTP or gRPC server. The **API gateway** owns the Axum router and the gRPC service registry. Modules register their routes and services during the [lifecycle](/intro/life-cycle) REST and gRPC phases.
+Gears don't own the HTTP or gRPC server. The **API gateway** owns the Axum router and the gRPC service registry. Gears register their routes and services during the [lifecycle](/intro/life-cycle) REST and gRPC phases.
 
 ## REST routes with OperationBuilder
 
@@ -61,13 +61,13 @@ pub async fn get_item(
 
 ## gRPC services
 
-Modules implementing `GrpcServiceCapability` register tonic services during the gRPC phase. gRPC is primarily used for out-of-process inter-module communication, implementing the same SDK traits as in-process adapters (see [SDK](/intro/core/sdk)).
+Gears implementing `GrpcServiceCapability` register tonic services during the gRPC phase. gRPC is primarily used for out-of-process inter-gear communication, implementing the same SDK traits as in-process adapters (see [SDK](/intro/core/sdk)).
 
 Security context is propagated via gRPC metadata using `toolkit-transport-grpc`.
 
 ## Key rules
 
-- Modules do **not** own the HTTP server or add transport middleware (CORS, timeouts, etc.)
+- Gears do **not** own the HTTP server or add transport middleware (CORS, timeouts, etc.)
 - Attach the service extension once after all routes: `router.layer(Extension(service))`
 - Follow the operation ID convention: `<crate>.<resource>.<action>`
 - Handlers should complete within ~30s; longer work returns `202 Accepted`

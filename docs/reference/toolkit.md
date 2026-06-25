@@ -1,6 +1,6 @@
 # Toolkit Libraries
 
-The Toolkit is the library ecosystem that powers Gears modules. It provides the runtime substrate -- module registration, database access, HTTP/gRPC transport, security primitives, error handling, and query building -- so that module developers can focus on business logic.
+The Toolkit is the library ecosystem that powers gears. It provides the runtime substrate -- gear registration, database access, HTTP/gRPC transport, security primitives, error handling, and query building -- so that gear developers can focus on business logic.
 
 All Toolkit crates are prefixed with `cf-gears-toolkit` and designed to work together.
 
@@ -8,7 +8,7 @@ All Toolkit crates are prefixed with `cf-gears-toolkit` and designed to work tog
 
 | Group | Crates | Purpose |
 |---|---|---|
-| **Module system** | [toolkit][src-toolkit], [toolkit-macros][src-macros], [toolkit-sdk][src-sdk] | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
+| **Gear system** | [toolkit][src-toolkit], [toolkit-macros][src-macros], [toolkit-sdk][src-sdk] | Gear registration, `ClientHub`, lifecycle macros, and client-side query builders |
 | **Data & storage** | [toolkit-db][src-db], [toolkit-db-macros][src-db-macros] | SeaORM integration, `SecureConn`, tenant-scoped queries, migrations |
 | **Networking** | [toolkit-http][src-http], [toolkit-transport-grpc][src-transport-grpc] | HTTP client with retries and SSRF protection, gRPC security context propagation |
 | **Errors** | [toolkit-canonical-errors][src-errors], [toolkit-canonical-errors-macro][src-errors-macro] | RFC 9457 Problem Details, canonical error types (AIP-193), `resource_error!` macro |
@@ -38,18 +38,18 @@ For the full library reference with detailed descriptions, see the [API referenc
 
 ## How the pieces fit together
 
-A typical module uses Toolkit crates at every layer:
+A typical gear uses Toolkit crates at every layer:
 
 - **Gear declaration** -- `toolkit-macros` provides `#[toolkit::gear(...)]` and `#[lifecycle(...)]`
 - **REST routes** -- The core `toolkit` crate provides `OperationBuilder` for type-safe route registration with integrated OpenAPI, auth, and error schemas
-- **Database** -- `toolkit-db` provides `SecureConn` and `SecureTx` for tenant-scoped queries, plus a per-module migration runner
+- **Database** -- `toolkit-db` provides `SecureConn` and `SecureTx` for tenant-scoped queries, plus a per-gear migration runner
 - **Error handling** -- `toolkit-canonical-errors` defines the `Problem` type (RFC 9457) and provides standard HTTP error constructors
-- **Inter-module calls** -- `toolkit-sdk` provides `WithSecurityContext` for scoping any client, and `QueryBuilder` for typed OData queries
+- **Inter-gear calls** -- `toolkit-sdk` provides `WithSecurityContext` for scoping any client, and `QueryBuilder` for typed OData queries
 - **Auth** -- `toolkit-auth` handles JWT validation and token refresh; `toolkit-security` provides `SecurityContext` and `AccessScope` types used throughout
 
 ## Getting started
 
-Modules don't depend on Toolkit crates individually. Instead, they depend on `cf-gears-toolkit`, which re-exports the relevant types through a unified prelude. The toolkit feature flags control which capabilities are available:
+Gears don't depend on Toolkit crates individually. Instead, they depend on `cf-gears-toolkit`, which re-exports the relevant types through a unified prelude. The toolkit feature flags control which capabilities are available:
 
 ```toml
 [dependencies]

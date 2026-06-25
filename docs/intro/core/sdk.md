@@ -1,11 +1,11 @@
 # SDK
 
-Every module exposes its public API through a companion **SDK crate** (`<name>-sdk/`). The SDK defines the contract that other modules consume -- transport-agnostic traits, domain models, and error types.
+Every gear exposes its public API through a companion **SDK crate** (`<name>-sdk/`). The SDK defines the contract that other gears consume -- transport-agnostic traits, domain models, and error types.
 
 ## SDK structure
 
 ```
-modules/<name>/sdk/
+gears/<name>/sdk/
   Cargo.toml
   src/
     lib.rs        # Re-exports main types
@@ -16,7 +16,7 @@ modules/<name>/sdk/
 
 ## SDK traits
 
-The SDK trait defines the operations that a module exposes. All methods take `&SecurityContext` as the first parameter to propagate identity and authorization:
+The SDK trait defines the operations that a gear exposes. All methods take `&SecurityContext` as the first parameter to propagate identity and authorization:
 
 ```rust
 #[async_trait]
@@ -37,7 +37,7 @@ pub trait MyGearApi: Send + Sync {
 
 ## ClientHub integration
 
-The module registers its SDK implementation during `init()`, and consumers resolve it through [ClientHub](/toolkit/03_clienthub_and_plugins):
+The gear registers its SDK implementation during `init()`, and consumers resolve it through [ClientHub](/toolkit/03_clienthub_and_plugins):
 
 ```rust
 // Provider (in init)
