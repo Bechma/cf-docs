@@ -1006,3 +1006,348 @@ The pattern is consistent: every write operation flows through **DTO → service
 - Add PATCH support for partial updates
 - Implement optimistic concurrency with `updated_at` ETags
 - Add a background worker gear that periodically checks bookmark URLs (see the link-checker pattern in the [Toolkit documentation](/toolkit/))
+
+## Appendix A: Enabling authentication
+
+The Brown guide uses `auth_disabled: true` and `AccessScope::allow_all()` for simplicity. This appendix shows how to make the CUD endpoints authentication-aware, so each request carries a real identity and writes are scoped to the caller's tenant.
+
+GET and LIST stay public — anyone can browse bookmarks. Create, update, and delete require a valid bearer token.
+
+### A.1 Routes — mark CUD as authenticated
+
+In `gears/bookmarks/src/api/rest/routes/bookmark.rs`, replace `.public()` with `.authenticated()` on the three write routes:
+
+```rust
+    // POST /bookmarks/v1/bookmarks - Create a bookmark
+    router = OperationBuilder::post("/bookmarks/v1/bookmarks")
+        .operation_id("bookmarks.create_bookmark")
+        .summary("Create a bookmark")
+        .description("Create a new bookmark with the provided URL, title, and optional description")
+        .tag("bookmarks")
+        .authenticated()  // [!code focus]
+        // ... rest unchanged
+
+    // PUT /bookmarks/v1/bookmarks/{id} - Update a bookmark
+    router = OperationBuilder::put("/bookmarks/v1/bookmarks/{id}")
+        .operation_id("bookmarks.update_bookmark")
+        .summary("Update a bookmark")
+        .description("Replace all fields of an existing bookmark")
+        .tag("bookmarks")
+        .authenticated()  // [!code focus]
+        // ... rest unchanged
+
+    // DELETE /bookmarks/v1/bookmarks/{id} - Delete a bookmark
+    router = OperationBuilder::delete("/bookmarks/v1/bookmarks/{id}")
+        .operation_id("bookmarks.delete_bookmark")
+        .summary("Delete a bookmark")
+        .description("Delete an existing bookmark by its UUID")
+        .tag("bookmarks")
+        .authenticated()  // [!code focus]
+        // ... rest unchanged
+```
+
+When authentication is enabled, the api-gateway middleware validates the bearer token on these routes and injects a `SecurityContext` into the request extensions. Public routes receive `SecurityContext::anonymous()` instead.
+
+### A.2 Handlers — extract the security context
+
+Import `SecurityContext` in the handlers module. In `gears/bookmarks/src/api/rest/handlers/mod.rs`:
+
+```rust
+use crate::api::rest::dto::{BookmarkDto, CreateBookmarkRequest, UpdateBookmarkRequest};
+
+use toolkit::api::canonical_prelude::*;
+#[cfg(feature = "odata")]
+use toolkit::api::select::{apply_select, page_to_projected_json};
+use toolkit_security::SecurityContext; // [!code focus]
+
+mod bookmark;
+// ... rest unchanged
+```
+
+Then update the three CUD handlers in `gears/bookmarks/src/api/rest/handlers/bookmark.rs` to extract and forward the context:
+
+```rust
+use super::{ApiResult, Json, BookmarkDto, CreateBookmarkRequest,
+    SecurityContext, UpdateBookmarkRequest}; // [!code focus]
+
+// ...
+
+/// Create a new bookmark
+#[tracing::instrument(skip(svc, ctx, input), fields(request_id = Empty))]
+pub async fn create_bookmark(
+    Extension(ctx): Extension<SecurityContext>, // [!code focus]
+    Extension(svc): Extension<std::sync::Arc<ConcreteAppServices>>,
+    Json(input): Json<CreateBookmarkRequest>,
+) -> ApiResult<Json<BookmarkDto>> {
+    let bookmark = svc
+        .bookmarks
+        .create_bookmark(&ctx, CreateBookmark { // [!code focus]
+            url: input.url,
+            title: input.title,
+            description: input.description,
+        })
+        .await?;
+    Ok(Json(BookmarkDto::from(bookmark)))
+}
+
+/// Update an existing bookmark (full replacement)
+#[tracing::instrument(skip(svc, ctx, input), fields(bookmark.id = %id, request_id = Empty))]
+pub async fn update_bookmark(
+    Extension(ctx): Extension<SecurityContext>, // [!code focus]
+    Extension(svc): Extension<std::sync::Arc<ConcreteAppServices>>,
+    Path(id): Path<Uuid>,
+    Json(input): Json<UpdateBookmarkRequest>,
+) -> ApiResult<Json<BookmarkDto>> {
+    let bookmark = svc
+        .bookmarks
+        .update_bookmark(
+            &ctx, // [!code focus]
+            id,
+            UpdateBookmark {
+                url: input.url,
+                title: input.title,
+                description: input.description,
+            },
+        )
+        .await?;
+    Ok(Json(BookmarkDto::from(bookmark)))
+}
+
+/// Delete a bookmark by ID
+#[tracing::instrument(skip(svc, ctx), fields(bookmark.id = %id, request_id = Empty))]
+pub async fn delete_bookmark(
+    Extension(ctx): Extension<SecurityContext>, // [!code focus]
+    Extension(svc): Extension<std::sync::Arc<ConcreteAppServices>>,
+    Path(id): Path<Uuid>,
+) -> ApiResult<http::StatusCode> {
+    svc.bookmarks.delete_bookmark(&ctx, id).await?; // [!code focus]
+    Ok(http::StatusCode::NO_CONTENT)
+}
+```
+
+::: tip
+Axum extracts parameters in declaration order. Place `Extension<SecurityContext>` before the body extractor (`Json<...>`) — Axum can only consume the request body once, so non-body extractors must come first.
+:::
+
+### A.3 Service — use the caller's identity
+
+Update the service methods to accept `&SecurityContext` and derive the tenant ID and access scope from it. In `gears/bookmarks/src/domain/service/bookmark.rs`:
+
+```rust
+use toolkit_security::{AccessScope, SecurityContext}; // [!code focus]
+```
+
+Replace the hard-coded `Uuid::nil()` tenant and `AccessScope::allow_all()` in the three CUD methods:
+
+```rust
+    #[instrument(skip(self, ctx, input))]
+    pub async fn create_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        input: CreateBookmark,
+    ) -> Result<Bookmark, DomainError> {
+        tracing::debug!("Creating bookmark");
+
+        if input.url.is_empty() {
+            return Err(DomainError::validation("url", "must not be empty"));
+        }
+        if input.title.is_empty() {
+            return Err(DomainError::validation("title", "must not be empty"));
+        }
+
+        let now = OffsetDateTime::now_utc();
+        let bookmark = Bookmark {
+            id: Uuid::new_v4(),
+            tenant_id: ctx.subject_tenant_id(), // [!code focus]
+            url: input.url,
+            title: input.title,
+            description: input.description,
+            created_at: now,
+            updated_at: now,
+        };
+
+        let conn = self.db.conn().map_err(DomainError::from)?;
+        let scope = AccessScope::for_tenant(ctx.subject_tenant_id()); // [!code focus]
+        let created = self.repo.create(&conn, &scope, bookmark).await?;
+
+        tracing::debug!("Successfully created bookmark");
+        Ok(created)
+    }
+
+    #[instrument(skip(self, ctx, input), fields(bookmark_id = %id))]
+    pub async fn update_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+        input: UpdateBookmark,
+    ) -> Result<Bookmark, DomainError> {
+        tracing::debug!("Updating bookmark");
+
+        if input.url.is_empty() {
+            return Err(DomainError::validation("url", "must not be empty"));
+        }
+        if input.title.is_empty() {
+            return Err(DomainError::validation("title", "must not be empty"));
+        }
+
+        let conn = self.db.conn().map_err(DomainError::from)?;
+        let scope = AccessScope::for_tenant(ctx.subject_tenant_id()); // [!code focus]
+
+        let existing = self
+            .repo
+            .get(&conn, &scope, id)
+            .await?
+            .ok_or_else(|| DomainError::not_found(id))?;
+
+        let bookmark = Bookmark {
+            id: existing.id,
+            tenant_id: existing.tenant_id,
+            url: input.url,
+            title: input.title,
+            description: input.description,
+            created_at: existing.created_at,
+            updated_at: OffsetDateTime::now_utc(),
+        };
+
+        let updated = self.repo.update(&conn, &scope, bookmark).await?;
+
+        tracing::debug!("Successfully updated bookmark");
+        Ok(updated)
+    }
+
+    #[instrument(skip(self, ctx), fields(bookmark_id = %id))]
+    pub async fn delete_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+    ) -> Result<(), DomainError> {
+        tracing::debug!("Deleting bookmark");
+
+        let conn = self.db.conn().map_err(DomainError::from)?;
+        let scope = AccessScope::for_tenant(ctx.subject_tenant_id()); // [!code focus]
+
+        let deleted = self.repo.delete(&conn, &scope, id).await?;
+        if !deleted {
+            return Err(DomainError::not_found(id));
+        }
+
+        tracing::debug!("Successfully deleted bookmark");
+        Ok(())
+    }
+```
+
+The GET and LIST methods can remain unchanged — they use `AccessScope::allow_all()` since the read routes are public.
+
+### A.4 Local client — forward the context
+
+Update the local client to pass `SecurityContext` through. In `gears/bookmarks/sdk/src/client.rs`, add a `ctx` parameter to the three CUD trait methods:
+
+```rust
+use crate::{Bookmark, BookmarkError, CreateBookmark, UpdateBookmark};
+use toolkit::async_trait;
+use toolkit_odata::{ODataQuery, Page};
+use toolkit_security::SecurityContext; // [!code focus]
+use uuid::Uuid;
+
+#[async_trait]
+pub trait BookmarkClientV1: Send + Sync {
+    // ... get_bookmark and list_bookmarks unchanged ...
+
+    async fn create_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        input: CreateBookmark,
+    ) -> Result<Bookmark, BookmarkError>;
+
+    async fn update_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+        input: UpdateBookmark,
+    ) -> Result<Bookmark, BookmarkError>;
+
+    async fn delete_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+    ) -> Result<(), BookmarkError>;
+}
+```
+
+Then update the local client implementation in `gears/bookmarks/src/domain/local_client/client.rs` to forward:
+
+```rust
+    async fn create_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        input: CreateBookmark,
+    ) -> Result<Bookmark, BookmarkError> {
+        self.services
+            .bookmarks
+            .create_bookmark(ctx, input) // [!code focus]
+            .await
+            .map_err(BookmarkError::from)
+    }
+
+    async fn update_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+        input: UpdateBookmark,
+    ) -> Result<Bookmark, BookmarkError> {
+        self.services
+            .bookmarks
+            .update_bookmark(ctx, id, input) // [!code focus]
+            .await
+            .map_err(BookmarkError::from)
+    }
+
+    async fn delete_bookmark(
+        &self,
+        ctx: &SecurityContext, // [!code focus]
+        id: Uuid,
+    ) -> Result<(), BookmarkError> {
+        self.services
+            .bookmarks
+            .delete_bookmark(ctx, id) // [!code focus]
+            .await
+            .map_err(BookmarkError::from)
+    }
+```
+
+### A.5 Config — enable the auth middleware
+
+In `config/bookmarks.yml`, remove `auth_disabled: true` (or set it to `false`):
+
+```yaml
+gears:
+  api-gateway:
+    config:
+      bind_addr: 0.0.0.0:8080
+      # auth_disabled removed — authentication is now active
+```
+
+With this change, the api-gateway middleware will:
+- Validate bearer tokens on `.authenticated()` routes via the **authn-resolver** system gear
+- Reject unauthenticated requests with `401 Unauthorized`
+- Inject `SecurityContext::anonymous()` on `.public()` routes (GET/LIST still work without a token)
+
+::: warning
+Enabling authentication requires a running **authn-resolver** gear configured with your identity provider (OAuth2/OIDC). Setting up the IdP integration is beyond the scope of this guide — see the [authn-resolver documentation](/toolkit/system-gears/authn-resolver) for configuration details.
+:::
+
+### What changed
+
+| Layer | Before (Brown guide) | After (auth-enabled) |
+|---|---|---|
+| **Routes** | `.public()` on all routes | `.authenticated()` on CUD routes |
+| **Handlers** | No identity extraction | `Extension<SecurityContext>` on CUD handlers |
+| **Service** | `Uuid::nil()` tenant, `AccessScope::allow_all()` | `ctx.subject_tenant_id()`, `AccessScope::for_tenant(...)` |
+| **SDK client** | No context parameter | `&SecurityContext` on CUD methods |
+| **Config** | `auth_disabled: true` | Auth enabled (default) |
+
+The repository and infrastructure layers are **unchanged** — they already accept `AccessScope` and enforce tenant isolation through the toolkit's secure helpers. The only difference is that the scope now carries a real tenant constraint instead of `allow_all()`.
+
+::: info Going further — policy-based authorization
+This appendix uses `AccessScope::for_tenant()` to derive the scope directly from the caller's identity. For fine-grained authorization (role-based access, resource ownership, cross-tenant delegation), the toolkit provides a **PolicyEnforcer** that calls an external Policy Decision Point (PDP) and returns a narrowly-scoped `AccessScope` based on configured policies. See the [users-info example](https://github.com/nicholasgasior/gears-rust/tree/dev/examples/toolkit/users-info) for the full PDP integration pattern.
+:::
