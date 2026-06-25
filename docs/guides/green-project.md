@@ -4,12 +4,12 @@ Build a bookmark manager from scratch using the Gears framework. By the end of t
 
 ## What you'll build
 
-A **bookmarks** module that:
+A **bookmarks** gear that:
 
 - Stores bookmarks (URL, title, description) in a database
 - Exposes GET and LIST endpoints via REST
 - Supports OData filtering, ordering, and pagination
-- Publishes an SDK so other modules can consume bookmarks programmatically
+- Publishes an SDK so other gears can consume bookmarks programmatically
 
 ## 1. Create the workspace
 
@@ -26,9 +26,9 @@ bookmarks-app/
   Gears.toml            # Gears orchestration manifest
   Dockerfile
   config/
-    bookmarks.yml       # Runtime config
-  modules/
-    hello-world/        # Starter module
+    quickstart.yml      # Default runtime config
+  gears/
+    hello-world/        # Starter gear
 ```
 
 Verify everything compiles:
@@ -39,21 +39,21 @@ cargo gears run
 
 You should see a repeated "hello world" message. Press `Ctrl+C` to stop.
 
-## 2. Generate the bookmarks module
+## 2. Generate the bookmarks gear
 
 ```bash
-cargo gears generate module --template api-db-handler --name bookmarks
+cargo gears generate gear --template api-db-handler --name bookmarks
 ```
 
-This creates `modules/bookmarks/` with the full DDD-light layout:
+This creates `gears/bookmarks/` with the full DDD-light layout:
 
 ```
-modules/bookmarks/
+gears/bookmarks/
   Cargo.toml
   src/
-    lib.rs                          # Crate root — re-exports the module struct
-    module.rs                       # #[toolkit::gear(...)] declaration
-    config.rs                       # Module configuration
+    lib.rs                          # Crate root — re-exports the gear struct
+    gear.rs                         # #[toolkit::gear(...)] declaration
+    config.rs                       # Gear configuration
     errors.rs                       # API error codes (RFC 9457)
     api/rest/
       dto.rs                        # REST DTOs (serde + utoipa)
@@ -85,7 +85,7 @@ modules/bookmarks/
 ```
 
 ::: info
-The `api-db-handler` template generates a working example using "Pokemon" as a placeholder domain. In the next sections we will transform it into our Bookmarks domain. This is a good exercise because it walks you through every layer of the DDD-light architecture.
+The `api-db-handler` template generates a working example using "Pokemon" as a placeholder domain. In the following sections we will transform it into our Bookmarks domain. This is a good exercise because it walks you through every layer of the DDD-light architecture.
 :::
 
 For a deeper look at this layout, see [Modules](/intro/core/modules) and [Gear Layout & SDK Pattern](/toolkit/02_gear_layout_and_sdk_pattern).
@@ -133,9 +133,9 @@ Set the password for your local database:
 export DB_PASSWORD=your_password
 ```
 
-## 4. Register the module
+## 4. Register the gear
 
-First, update `Gears.toml` to replace the `hello-world` starter module with `bookmarks`. The bookmarks module needs REST endpoints, which requires the `api-gateway` system gear and its dependencies:
+First, update `Gears.toml` to replace the `hello-world` starter gear with `bookmarks`. The bookmarks gear needs REST endpoints, which requires the `api-gateway` system gear and its dependencies:
 
 ```toml
 [workspace]
@@ -143,7 +143,7 @@ version = 1
 
 [apps.bookmarks.dev]
 config = "bookmarks.yml"
-modules = [
+gears = [
     { source = "remote", name = "types-registry", package = "cf-gears-types-registry", version = "0.1.22" },
     { source = "remote", name = "authn-resolver", package = "cf-gears-authn-resolver", version = "0.2.16" },
     { source = "remote", name = "grpc-hub", package = "cf-gears-grpc-hub", version = "0.2.6" },
@@ -157,29 +157,29 @@ modules = [
 Any gear with `rest` capability requires `api-gateway` (the HTTP gateway that owns the server and mounts routes). The `api-gateway` in turn depends on `grpc-hub` and `authn-resolver`, which depends on `types-registry`. All four must be listed — order them so dependencies come before dependents.
 :::
 
-Then register the module in the runtime config and wire it to the database:
+Then register the gear in the runtime config and wire it to the database:
 
 ```bash
-cargo gears config mod add bookmarks -c ./config/bookmarks.yml
-cargo gears config mod db add bookmarks -c ./config/bookmarks.yml --server main
+cargo gears config gear add bookmarks -c ./config/bookmarks.yml
+cargo gears config gear db add bookmarks -c ./config/bookmarks.yml --server main
 ```
 
-The first command registers the module in the runtime config. The second wires it to the `main` database server so it receives a connection during startup.
+The first command registers the gear in the runtime config. The second wires it to the `main` database server so it receives a connection during startup.
 
 ::: tip
-Database backend features (like `postgres`) are declared in `Gears.toml` on the module ref, not in the runtime config. See the `features = ["postgres"]` in the modules list above.
+Database backend features (like `postgres`) are declared in `Gears.toml` on the gear ref, not in the runtime config. See the `features = ["postgres"]` in the gears list above.
 :::
 
 ## 5. Transform the SDK layer
 
-The SDK is the public contract other modules use to interact with bookmarks. We start here because the Gears architecture is **SDK-first** — the public interface is defined before the implementation.
+The SDK is the public contract other gears use to interact with bookmarks. We start here because the Gears architecture is **SDK-first** — the public interface is defined before the implementation.
 
-### 5.1 Models (`modules/bookmarks/sdk/src/models.rs`)
+### 5.1 Models (`gears/bookmarks/sdk/src/models.rs`)
 
 Replace the Pokemon model with a Bookmark model. We change `name` → `title`, replace `height: i32` with `url: String`, and add an optional `description`:
 
 ```rust
-//! Public models for the bookmarks module.
+//! Public models for the bookmarks gear.
 
 use time::OffsetDateTime;
 use uuid::Uuid;
@@ -197,12 +197,12 @@ pub struct Bookmark {
 }
 ```
 
-### 5.2 Errors (`modules/bookmarks/sdk/src/errors.rs`)
+### 5.2 Errors (`gears/bookmarks/sdk/src/errors.rs`)
 
 Rename `PokemonError` → `BookmarkError`:
 
 ```rust
-//! Public error types for the bookmarks module.
+//! Public error types for the bookmarks gear.
 
 use thiserror::Error;
 use uuid::Uuid;
@@ -248,12 +248,12 @@ impl BookmarkError {
 }
 ```
 
-### 5.3 Client trait (`modules/bookmarks/sdk/src/client.rs`)
+### 5.3 Client trait (`gears/bookmarks/sdk/src/client.rs`)
 
 Rename all Pokemon types and methods to Bookmark:
 
 ```rust
-//! Object-safe streaming boundary for the bookmarks module.
+//! Object-safe streaming boundary for the bookmarks gear.
 //!
 //! Designed for `ClientHub` registration as `Arc<dyn BookmarkClientV1>`.
 
@@ -276,7 +276,7 @@ use crate::odata::BookmarkSchema;
 #[cfg(feature = "odata")]
 pub type BookmarkStream<T> = Pin<Box<dyn Stream<Item = Result<T, BookmarkError>> + Send + 'static>>;
 
-/// Object-safe client for inter-module consumption via `ClientHub` (Version 1).
+/// Object-safe client for inter-gear consumption via `ClientHub` (Version 1).
 #[async_trait]
 pub trait BookmarkClientV1: Send + Sync {
     #[cfg(feature = "odata")]
@@ -304,10 +304,10 @@ pub trait BookmarkStreamingClientV1: Send + Sync {
 Rename the file and update the filter fields to match our domain:
 
 ```bash
-mv modules/bookmarks/sdk/src/odata/pokemon.rs modules/bookmarks/sdk/src/odata/bookmark.rs
+mv gears/bookmarks/sdk/src/odata/pokemon.rs gears/bookmarks/sdk/src/odata/bookmark.rs
 ```
 
-Replace the contents of `modules/bookmarks/sdk/src/odata/bookmark.rs`:
+Replace the contents of `gears/bookmarks/sdk/src/odata/bookmark.rs`:
 
 ```rust
 //! OData filter field definitions for Bookmark resources.
@@ -356,7 +356,7 @@ pub const BOOKMARK_CREATED_AT: FieldRef<BookmarkSchema, OffsetDateTime> =
     FieldRef::new(BookmarkFilterField::CreatedAt);
 ```
 
-Update the OData module declaration in `modules/bookmarks/sdk/src/odata/mod.rs`:
+Update the OData module declaration in `gears/bookmarks/sdk/src/odata/mod.rs`:
 
 ```rust
 //! OData filter field definitions for bookmark resources.
@@ -366,14 +366,14 @@ mod bookmark;
 pub use bookmark::*;
 ```
 
-### 5.5 SDK crate root (`modules/bookmarks/sdk/src/lib.rs`)
+### 5.5 SDK crate root (`gears/bookmarks/sdk/src/lib.rs`)
 
 Update re-exports:
 
 ```rust
 //! Bookmarks SDK
 //!
-//! Public API contract for the bookmarks module:
+//! Public API contract for the bookmarks gear:
 //! - `BookmarkClientV1` trait
 //! - `Bookmark` model
 //! - `BookmarkError` error type
@@ -397,7 +397,7 @@ pub use models::Bookmark;
 
 The domain layer contains business logic, repository traits, and error types. It depends on the SDK but not on infrastructure details.
 
-### 6.1 Domain error (`modules/bookmarks/src/domain/error.rs`)
+### 6.1 Domain error (`gears/bookmarks/src/domain/error.rs`)
 
 Update error messages and the `From<DomainError> for BookmarkError` conversion:
 
@@ -489,10 +489,10 @@ impl From<ScopeError> for DomainError {
 Rename the file and update the trait:
 
 ```bash
-mv modules/bookmarks/src/domain/repos/pokemon_repo.rs modules/bookmarks/src/domain/repos/bookmark_repo.rs
+mv gears/bookmarks/src/domain/repos/pokemon_repo.rs gears/bookmarks/src/domain/repos/bookmark_repo.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/domain/repos/bookmark_repo.rs`:
+Replace the contents of `gears/bookmarks/src/domain/repos/bookmark_repo.rs`:
 
 ```rust
 use bookmarks_sdk::Bookmark;
@@ -525,7 +525,7 @@ pub trait BookmarkRepository: Send + Sync {
 }
 ```
 
-Update the repos module declaration in `modules/bookmarks/src/domain/repos/mod.rs`:
+Update the repos module declaration in `gears/bookmarks/src/domain/repos/mod.rs`:
 
 ```rust
 mod bookmark_repo;
@@ -538,10 +538,10 @@ pub(crate) use bookmark_repo::BookmarkRepository;
 Rename the file:
 
 ```bash
-mv modules/bookmarks/src/domain/service/pokemon.rs modules/bookmarks/src/domain/service/bookmark.rs
+mv gears/bookmarks/src/domain/service/pokemon.rs gears/bookmarks/src/domain/service/bookmark.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/domain/service/bookmark.rs`:
+Replace the contents of `gears/bookmarks/src/domain/service/bookmark.rs`:
 
 ```rust
 use std::sync::Arc;
@@ -609,7 +609,7 @@ impl<R: BookmarkRepository + 'static> BookmarkService<R> {
 }
 ```
 
-Update the service module declaration in `modules/bookmarks/src/domain/service/mod.rs`. Replace all Pokemon references with Bookmark:
+Update the service module declaration in `gears/bookmarks/src/domain/service/mod.rs`. Replace all Pokemon references with Bookmark:
 
 ```rust
 //! Domain service layer - business logic and rules.
@@ -678,7 +678,7 @@ where
 }
 ```
 
-### 6.4 Local client (`modules/bookmarks/src/domain/local_client/client.rs`)
+### 6.4 Local client (`gears/bookmarks/src/domain/local_client/client.rs`)
 
 ```rust
 use std::sync::Arc;
@@ -694,7 +694,7 @@ use bookmarks_sdk::{Bookmark, BookmarkClientV1, BookmarkError};
 
 #[cfg(feature = "odata")]
 use crate::domain::local_client::streaming::LocalBookmarkStreamingClient;
-use crate::module::ConcreteAppServices;
+use crate::gear::ConcreteAppServices;
 
 /// Local implementation of the object-safe `BookmarkClientV1`.
 #[domain_model]
@@ -735,7 +735,7 @@ impl BookmarkClientV1 for BookmarkLocalClient {
 }
 ```
 
-### 6.5 Streaming client (`modules/bookmarks/src/domain/local_client/streaming.rs`)
+### 6.5 Streaming client (`gears/bookmarks/src/domain/local_client/streaming.rs`)
 
 ```rust
 use std::pin::Pin;
@@ -748,7 +748,7 @@ use toolkit_macros::domain_model;
 use toolkit_sdk::odata::{QueryBuilder, items_stream_boxed};
 use toolkit_sdk::pager::PagerError;
 
-use crate::module::ConcreteAppServices;
+use crate::gear::ConcreteAppServices;
 
 #[domain_model]
 pub(crate) struct LocalBookmarkStreamingClient {
@@ -800,10 +800,10 @@ The infrastructure layer handles persistence — SeaORM entities, migrations, an
 Rename the file:
 
 ```bash
-mv modules/bookmarks/src/infra/storage/entity/pokemon.rs modules/bookmarks/src/infra/storage/entity/bookmark.rs
+mv gears/bookmarks/src/infra/storage/entity/pokemon.rs gears/bookmarks/src/infra/storage/entity/bookmark.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/infra/storage/entity/bookmark.rs`. Note the new table name, the field changes (`name`/`height` → `url`/`title`/`description`), and the `Option<String>` for `description`:
+Replace the contents of `gears/bookmarks/src/infra/storage/entity/bookmark.rs`. Note the new table name, the field changes (`name`/`height` → `url`/`title`/`description`), and the `Option<String>` for `description`:
 
 ```rust
 use toolkit_db_macros::Scopable;
@@ -831,7 +831,7 @@ pub enum Relation {}
 impl ActiveModelBehavior for ActiveModel {}
 ```
 
-Update the entity module declaration in `modules/bookmarks/src/infra/storage/entity/mod.rs`:
+Update the entity module declaration in `gears/bookmarks/src/infra/storage/entity/mod.rs`:
 
 ```rust
 pub mod bookmark;
@@ -839,7 +839,7 @@ pub mod bookmark;
 pub use bookmark::{Column, Entity, Model};
 ```
 
-### 7.2 Migration (`modules/bookmarks/src/infra/storage/migrations/m20260111_000001_initial.rs`)
+### 7.2 Migration (`gears/bookmarks/src/infra/storage/migrations/m20260111_000001_initial.rs`)
 
 Update the table name to `bookmarks`, replace `name`/`height` columns with `url`/`title`/`description`, and rename indexes:
 
@@ -925,7 +925,7 @@ Always add an index on `tenant_id` — the secure ORM injects tenant filters on 
 
 ### 7.3 Seed data migration
 
-Add a second migration to populate the table with sample bookmarks so the API returns data immediately. Create `modules/bookmarks/src/infra/storage/migrations/m20260111_000002_seed.rs`:
+Add a second migration to populate the table with sample bookmarks so the API returns data immediately. Create `gears/bookmarks/src/infra/storage/migrations/m20260111_000002_seed.rs`:
 
 ```rust
 use sea_orm_migration::prelude::*;
@@ -968,7 +968,7 @@ ON CONFLICT (id) DO NOTHING;
 }
 ```
 
-Register the new migration in `modules/bookmarks/src/infra/storage/migrations/mod.rs`:
+Register the new migration in `gears/bookmarks/src/infra/storage/migrations/mod.rs`:
 
 ```rust
 use sea_orm_migration::prelude::*;
@@ -989,7 +989,7 @@ impl MigratorTrait for Migrator {
 }
 ```
 
-### 7.4 Mapper (`modules/bookmarks/src/infra/storage/mapper.rs`)
+### 7.4 Mapper (`gears/bookmarks/src/infra/storage/mapper.rs`)
 
 Update the field mappings to match the new model:
 
@@ -1028,7 +1028,7 @@ impl From<&entity::bookmark::Model> for Bookmark {
 }
 ```
 
-### 7.5 OData mapper (`modules/bookmarks/src/infra/storage/odata_mapper.rs`)
+### 7.5 OData mapper (`gears/bookmarks/src/infra/storage/odata_mapper.rs`)
 
 Update filter field mappings. Note the new `Url` and `Title` fields replacing `Name`:
 
@@ -1077,10 +1077,10 @@ impl ODataFieldMapping<BookmarkFilterField> for BookmarkODataMapper {
 Rename the file:
 
 ```bash
-mv modules/bookmarks/src/infra/storage/pokemon_sea_repo.rs modules/bookmarks/src/infra/storage/bookmark_sea_repo.rs
+mv gears/bookmarks/src/infra/storage/pokemon_sea_repo.rs gears/bookmarks/src/infra/storage/bookmark_sea_repo.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/infra/storage/bookmark_sea_repo.rs`:
+Replace the contents of `gears/bookmarks/src/infra/storage/bookmark_sea_repo.rs`:
 
 ```rust
 use toolkit::async_trait;
@@ -1173,7 +1173,7 @@ impl BookmarkRepository for OrmBookmarkRepository {
 }
 ```
 
-Update the storage module declaration in `modules/bookmarks/src/infra/storage/mod.rs`:
+Update the storage module declaration in `gears/bookmarks/src/infra/storage/mod.rs`:
 
 ```rust
 //! Infrastructure storage layer - database persistence and OData mapping.
@@ -1194,7 +1194,7 @@ pub use bookmark_sea_repo::OrmBookmarkRepository;
 
 The API layer handles HTTP-specific concerns: DTOs, handlers, routes, and error mapping.
 
-### 8.1 DTO (`modules/bookmarks/src/api/rest/dto.rs`)
+### 8.1 DTO (`gears/bookmarks/src/api/rest/dto.rs`)
 
 Update the DTO with bookmark fields:
 
@@ -1238,10 +1238,10 @@ impl From<Bookmark> for BookmarkDto {
 Rename the file:
 
 ```bash
-mv modules/bookmarks/src/api/rest/handlers/pokemon.rs modules/bookmarks/src/api/rest/handlers/bookmark.rs
+mv gears/bookmarks/src/api/rest/handlers/pokemon.rs gears/bookmarks/src/api/rest/handlers/bookmark.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/api/rest/handlers/bookmark.rs`:
+Replace the contents of `gears/bookmarks/src/api/rest/handlers/bookmark.rs`:
 
 ```rust
 use axum::Extension;
@@ -1254,7 +1254,7 @@ use toolkit::api::odata::OData;
 use super::{
     ApiResult, Json, JsonBody, JsonPage, BookmarkDto, apply_select, page_to_projected_json,
 };
-use crate::module::ConcreteAppServices;
+use crate::gear::ConcreteAppServices;
 
 /// List bookmarks with cursor-based pagination and optional field projection via $select
 #[tracing::instrument(
@@ -1294,7 +1294,7 @@ pub async fn get_bookmark(
 }
 ```
 
-Update the handlers module declaration in `modules/bookmarks/src/api/rest/handlers/mod.rs`:
+Update the handlers module declaration in `gears/bookmarks/src/api/rest/handlers/mod.rs`:
 
 ```rust
 use crate::api::rest::dto::BookmarkDto;
@@ -1317,10 +1317,10 @@ pub(crate) use bookmark::list_bookmarks;
 Rename the file:
 
 ```bash
-mv modules/bookmarks/src/api/rest/routes/pokemon.rs modules/bookmarks/src/api/rest/routes/bookmark.rs
+mv gears/bookmarks/src/api/rest/routes/pokemon.rs gears/bookmarks/src/api/rest/routes/bookmark.rs
 ```
 
-Replace the contents of `modules/bookmarks/src/api/rest/routes/bookmark.rs`. Note the new route paths under `/bookmarks/v1/bookmarks`:
+Replace the contents of `gears/bookmarks/src/api/rest/routes/bookmark.rs`. Note the new route paths under `/bookmarks/v1/bookmarks`:
 
 ```rust
 //! Only compiled when the `odata` feature is enabled — the list route requires
@@ -1382,14 +1382,14 @@ pub(super) fn register_bookmark_routes(mut router: Router, openapi: &dyn OpenApi
 }
 ```
 
-Update the routes module declaration in `modules/bookmarks/src/api/rest/routes/mod.rs`:
+Update the routes module declaration in `gears/bookmarks/src/api/rest/routes/mod.rs`:
 
 ```rust
 //! REST API route definitions - OpenAPI and Axum routing.
 
 #[cfg(feature = "odata")]
 use crate::api::rest::{dto, handlers};
-use crate::module::ConcreteAppServices;
+use crate::gear::ConcreteAppServices;
 use axum::Router;
 use toolkit::api::OpenApiRegistry;
 use std::sync::Arc;
@@ -1397,7 +1397,7 @@ use std::sync::Arc;
 #[cfg(feature = "odata")]
 mod bookmark;
 
-/// Register all routes for the bookmarks module
+/// Register all routes for the bookmarks gear
 pub(crate) fn register_routes(
     mut router: Router,
     openapi: &dyn OpenApiRegistry,
@@ -1417,7 +1417,7 @@ pub(crate) fn register_routes(
 }
 ```
 
-### 8.4 Error mapping (`modules/bookmarks/src/api/rest/error.rs`)
+### 8.4 Error mapping (`gears/bookmarks/src/api/rest/error.rs`)
 
 Update error messages:
 
@@ -1471,9 +1471,9 @@ impl From<DomainError> for Problem {
 }
 ```
 
-## 9. Update module wiring
+## 9. Update gear wiring
 
-### 9.1 API error codes (`modules/bookmarks/src/errors.rs`)
+### 9.1 API error codes (`gears/bookmarks/src/errors.rs`)
 
 Update the error namespace and all Pokemon references to Bookmark:
 
@@ -1597,12 +1597,12 @@ impl ErrorCode {
 }
 ```
 
-### 9.2 Module config (`modules/bookmarks/src/config.rs`)
+### 9.2 Gear config (`gears/bookmarks/src/config.rs`)
 
 ```rust
 use serde::Deserialize;
 
-/// Configuration for the bookmarks module
+/// Configuration for the bookmarks gear
 #[derive(Debug, Deserialize)]
 pub struct BookmarkConfig {
     #[serde(default = "default_page_size")]
@@ -1628,7 +1628,7 @@ fn default_max_page_size() -> u32 { 1000 }
 Check the generated `config.rs` for the exact helper function pattern — it may vary slightly between template versions.
 :::
 
-### 9.3 Module declaration (`modules/bookmarks/src/module.rs`)
+### 9.3 Gear declaration (`gears/bookmarks/src/gear.rs`)
 
 ```rust
 use std::sync::{Arc, OnceLock};
@@ -1651,16 +1651,16 @@ use crate::infra::storage::OrmBookmarkRepository;
 /// Type alias for the concrete `AppServices` type used with ORM repositories.
 pub(crate) type ConcreteAppServices = AppServices<OrmBookmarkRepository>;
 
-/// Bookmarks module with DDD-light layout and proper `ClientHub` integration
+/// Bookmarks gear with DDD-light layout and proper `ClientHub` integration
 #[toolkit::gear(
     name = "bookmarks",
     capabilities = [db, rest]
 )]
-pub struct BookmarkModule {
+pub struct BookmarkGear {
     service: OnceLock<Arc<ConcreteAppServices>>,
 }
 
-impl Default for BookmarkModule {
+impl Default for BookmarkGear {
     fn default() -> Self {
         Self {
             service: OnceLock::new(),
@@ -1669,7 +1669,7 @@ impl Default for BookmarkModule {
 }
 
 #[async_trait]
-impl Gear for BookmarkModule {
+impl Gear for BookmarkGear {
     async fn init(&self, ctx: &GearCtx) -> anyhow::Result<()> {
         let cfg: BookmarkConfig = ctx.config()?;
         debug!(
@@ -1691,7 +1691,7 @@ impl Gear for BookmarkModule {
 
         self.service
             .set(services.clone())
-            .map_err(|_| anyhow::anyhow!("{} module already initialized", Self::MODULE_NAME))?;
+            .map_err(|_| anyhow::anyhow!("{} gear already initialized", Self::GEAR_NAME))?;
 
         let local = BookmarkLocalClient::new(services);
 
@@ -1702,7 +1702,7 @@ impl Gear for BookmarkModule {
     }
 }
 
-impl DatabaseCapability for BookmarkModule {
+impl DatabaseCapability for BookmarkGear {
     fn migrations(&self) -> Vec<Box<dyn MigrationTrait>> {
         use sea_orm_migration::MigratorTrait;
         info!("Providing bookmarks database migrations");
@@ -1710,7 +1710,7 @@ impl DatabaseCapability for BookmarkModule {
     }
 }
 
-impl RestApiCapability for BookmarkModule {
+impl RestApiCapability for BookmarkGear {
     fn register_rest(
         &self,
         _ctx: &GearCtx,
@@ -1733,7 +1733,7 @@ impl RestApiCapability for BookmarkModule {
 }
 ```
 
-### 9.4 Crate root (`modules/bookmarks/src/lib.rs`)
+### 9.4 Crate root (`gears/bookmarks/src/lib.rs`)
 
 ```rust
 #![doc = include_str!("../README.md")]
@@ -1741,9 +1741,9 @@ impl RestApiCapability for BookmarkModule {
 // === API ERROR DEFINITIONS ===
 pub mod errors;
 
-// === MODULE DEFINITION ===
-pub mod module;
-pub use module::BookmarkModule;
+// === GEAR DEFINITION ===
+pub mod gear;
+pub use gear::BookmarkGear;
 
 // === INTERNAL MODULES ===
 pub(crate) mod api;
@@ -1813,11 +1813,11 @@ See the [Manifest](/intro/manifest#lint-policy) page for lint and test configura
 bookmarks-app/
   Gears.toml
   config/bookmarks.yml
-  modules/
-    hello-world/              # Starter module (can be removed)
+  gears/
+    hello-world/              # Starter gear (can be removed)
     bookmarks/
       src/
-        module.rs             # Gear declaration with db + rest
+        gear.rs               # Gear declaration with db + rest
         api/rest/             # DTOs, handlers, routes
         domain/               # Service, errors, local client
         infra/storage/        # Entity, mapper, migrations
