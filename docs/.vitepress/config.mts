@@ -70,8 +70,8 @@ export default defineConfig({
           text: "Core concepts",
           collapsed: false,
           items: [
-            { text: "Modules", link: "/intro/core/modules" },
-            { text: "System Modules", link: "/intro/core/system-modules" },
+            { text: "Gears", link: "/intro/core/modules" },
+            { text: "System Gears", link: "/intro/core/system-modules" },
             { text: "SDK", link: "/intro/core/sdk" },
             { text: "Database", link: "/intro/core/database" },
             { text: "OData", link: "/intro/core/odata" },

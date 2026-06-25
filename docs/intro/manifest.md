@@ -1,8 +1,8 @@
 # Manifest
 
-`Gears.toml` is the orchestration manifest used by `cargo gears`. It defines workspace defaults, the available apps and environments, the runtime config used by each environment, the selected modules, and the run, build, lint, and test policies.
+`Gears.toml` is the orchestration manifest used by `cargo gears`. It defines workspace defaults, the available apps and environments, the runtime config used by each environment, the selected gears, and the run, build, lint, and test policies.
 
-The default manifest file name is `Gears.toml`. Apps are declared under `[apps.<app>.<env>]`. Each environment must define `config` and can also define `modules`, `run`, `build`, `lint`, and `test`.
+The default manifest file name is `Gears.toml`. Apps are declared under `[apps.<app>.<env>]`. Each environment must define `config` and can also define `gears`, `run`, `build`, `lint`, and `test`.
 
 Workspace fields include:
 
@@ -12,12 +12,12 @@ Workspace fields include:
 - `generated-dir`, which defaults to `.gears`
 - `global_env`, an optional shared environment block
 
-Module references support two sources:
+Gear references support two sources:
 
 - `local`: `name`, with optional `version` and `package`
 - `remote`: `name`, `version`, `package`, and optional `registry`
 
-Optional template registries can also be declared under `templates` for modules, configs, and agents.
+Optional template registries can also be declared under `templates` for gears, configs, and agents.
 
 ```toml
 [workspace]
@@ -27,7 +27,7 @@ generated-dir = ".gears"
 
 [apps.quickstart.dev]
 config = "quickstart.yml"
-modules = [
+gears = [
   { source = "local", name = "hello-world" },
   { source = "remote", name = "api-gateway", package = "cf-api-gateway", version = "0.1" }
 ]
@@ -107,7 +107,7 @@ Test settings live under `[apps.<app>.<env>.test]`.
 
 - `ref`: reuse the test policy from another environment
 - `runner`: `nextest` or `cargo`, with `nextest` as the default
-- `feature-set`: per-module feature matrices to test
+- `feature-set`: per-gear feature matrices to test
 - `custom-command`: optional custom test command
 
 Each `feature-set` entry supports these modes:
@@ -122,6 +122,6 @@ Each `feature-set` entry supports these modes:
 ```bash
 cargo gears test                       # run with manifest defaults (nextest)
 cargo gears test --runner cargo        # use cargo test instead of nextest
-cargo gears test --module my-module    # test a single module only
+cargo gears test --gear my-gear        # test a single gear only
 cargo gears test --coverage            # run with cargo-llvm-cov coverage
 ```

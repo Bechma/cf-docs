@@ -6,18 +6,18 @@
 
 The `libs/` directory contains the foundational crates that make up the Toolkit ecosystem. They are organized into functional groups:
 
-### Module System
+### Gear System
 
 | Crate | Description |
 |---|---|
-| [`cf-gears-toolkit`][src-toolkit] | Core module system: inventory-based module registration, `ClientHub` for typed in-process clients, REST/OpenAPI helpers, and runtime lifecycle management. |
-| [`cf-gears-toolkit-macros`][src-macros] | Proc-macros re-exported by `cf-gears-toolkit`: `#[gear(...)]` for declaring and registering modules, `#[lifecycle(...)]` for generating `Runnable` impls, and `#[grpc_client(...)]` for wrapping tonic clients. |
+| [`cf-gears-toolkit`][src-toolkit] | Core gear system: inventory-based gear registration, `ClientHub` for typed in-process clients, REST/OpenAPI helpers, and runtime lifecycle management. |
+| [`cf-gears-toolkit-macros`][src-macros] | Proc-macros re-exported by `cf-gears-toolkit`: `#[gear(...)]` for declaring and registering gears, `#[lifecycle(...)]` for generating `Runnable` impls, and `#[grpc_client(...)]` for wrapping tonic clients. |
 
 ### Data & Storage
 
 | Crate | Description |
 |---|---|
-| [`cf-gears-toolkit-db`][src-db] | Database abstractions: typed connection config, SQLx backends (SQLite / Postgres / MySQL), SeaORM integration, a secure-by-default ORM wrapper that enforces tenant isolation at compile time, and a per-module migration runner. |
+| [`cf-gears-toolkit-db`][src-db] | Database abstractions: typed connection config, SQLx backends (SQLite / Postgres / MySQL), SeaORM integration, a secure-by-default ORM wrapper that enforces tenant isolation at compile time, and a per-gear migration runner. |
 | [`cf-gears-toolkit-db-macros`][src-db-macros] | Proc-macro derives for the `cf-gears-toolkit-db` secure ORM layer. |
 
 ### Networking & Transport
@@ -67,7 +67,7 @@ The `libs/` directory contains the foundational crates that make up the Toolkit 
 
 | Crate | Description |
 |---|---|
-| [`cf-gears-system-sdks`][src-system-sdks] | Umbrella crate that re-exports individual system-module SDKs behind feature flags (e.g. `directory`, `directory_grpc`). |
+| [`cf-gears-system-sdks`][src-system-sdks] | Umbrella crate that re-exports individual system gear SDKs behind feature flags (e.g. `directory`, `directory_grpc`). |
 
 [src-toolkit]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit
 [src-macros]: https://github.com/constructorfabric/gears-rust/tree/main/libs/toolkit-macros
