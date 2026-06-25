@@ -1,3 +1,6 @@
+---
+outline: deep
+---
 # Brown Project: CRUD Bookmarks
 
 Extend the bookmark manager from the [Green Project](./green-project) with create, update, and delete endpoints.

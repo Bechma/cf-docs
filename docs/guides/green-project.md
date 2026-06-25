@@ -1,3 +1,6 @@
+---
+outline: deep
+---
 # Green Project: Bookmark Manager
 
 Build a bookmark manager from scratch using the Gears framework. By the end of this guide you will have a running application with REST endpoints for listing and retrieving bookmarks, backed by a database with OData filtering and pagination.
