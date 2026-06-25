@@ -1691,7 +1691,7 @@ impl Gear for BookmarkGear {
 
         self.service
             .set(services.clone())
-            .map_err(|_| anyhow::anyhow!("{} gear already initialized", Self::GEAR_NAME))?;
+            .map_err(|_| anyhow::anyhow!("bookmarks gear already initialized"))?;
 
         let local = BookmarkLocalClient::new(services);
 
