@@ -88,7 +88,7 @@ gears/bookmarks/
 The `api-db-handler` template generates a working example using "Pokemon" as a placeholder domain. In the following sections we will transform it into our Bookmarks domain. This is a good exercise because it walks you through every layer of the DDD-light architecture.
 :::
 
-For a deeper look at this layout, see [Modules](/intro/core/modules) and [Gear Layout & SDK Pattern](/toolkit/02_gear_layout_and_sdk_pattern).
+For a deeper look at this layout, see [Gears](/intro/core/gears) and [Gear Layout & SDK Pattern](/toolkit/02_gear_layout_and_sdk_pattern).
 
 ## 3. Generate a database config
 

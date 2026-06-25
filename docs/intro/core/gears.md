@@ -1,14 +1,14 @@
-# Modules
+# Gears
 
-Modules (also called **gears**) are the primary unit of composition in Gears. Each module is a self-contained Rust crate that encapsulates business logic, exposes a versioned SDK, and declares its runtime capabilities.
+Gears are the primary unit of composition in the framework. Each gear is a self-contained Rust crate that encapsulates business logic, exposes a versioned SDK, and declares its runtime capabilities.
 
 ## Directory structure
 
-Every module follows a DDD-light layout:
+Every gear follows a DDD-light layout:
 
 ```
-modules/<name>/
-  Cargo.toml              # Module crate
+gears/<name>/
+  Cargo.toml              # Gear crate
   src/
     lib.rs                # Re-exports SDK types + gear struct
     gear.rs               # #[toolkit::gear(...)] + capabilities
@@ -34,11 +34,11 @@ modules/<name>/
       errors.rs           # Transport-agnostic errors
 ```
 
-Domain logic lives in `domain/` and is free from transport and infrastructure details. The SDK crate (`sdk/`) defines the public contract that other modules consume.
+Domain logic lives in `domain/` and is free from transport and infrastructure details. The SDK crate (`sdk/`) defines the public contract that other gears consume.
 
 ## Gear declaration
 
-Modules declare themselves and their capabilities with the `#[toolkit::gear(...)]` macro:
+Gears declare themselves and their capabilities with the `#[toolkit::gear(...)]` macro:
 
 ```rust
 #[toolkit::gear(
@@ -54,7 +54,7 @@ The runtime discovers registered gears via inventory and wires them automaticall
 
 ## Capabilities
 
-Capabilities determine which [lifecycle phases](/intro/life-cycle) a module participates in:
+Capabilities determine which [lifecycle phases](/intro/life-cycle) a gear participates in:
 
 | Capability | Purpose |
 |---|---|
@@ -63,16 +63,16 @@ Capabilities determine which [lifecycle phases](/intro/life-cycle) a module part
 | `grpc` | gRPC service registration |
 | `stateful` | Long-running background tasks with lifecycle management |
 
-## Creating a module
+## Creating a gear
 
 ```bash
-cargo gears generate module --template background-worker
+cargo gears generate gear --template background-worker
 cargo gears config mod add background-worker -c ./config/quickstart.yml
 ```
 
-The CLI scaffolds the directory structure and registers the module in the workspace. Templates provide pre-built starting points for common patterns.
+The CLI scaffolds the directory structure and registers the gear in the workspace. Templates provide pre-built starting points for common patterns.
 
-## Module categories
+## Gear categories
 
 Gears are organized into categories with strict dependency rules:
 
@@ -85,18 +85,18 @@ Gears are organized into categories with strict dependency rules:
 
 Business gears may depend on GenAI, Serverless, and Core gears. No circular or cross-category sideways dependencies are allowed except through SDK contracts.
 
-## Module references
+## Gear references
 
-Modules are referenced in `Gears.toml` as either local or remote:
+Gears are referenced in `Gears.toml` as either local or remote:
 
 ```toml
-modules = [
+gears = [
   { source = "local", name = "hello-world" },
   { source = "remote", name = "api-gateway", package = "cf-api-gateway", version = "0.1" }
 ]
 ```
 
-Use `cargo gears ls modules` to list available modules in the workspace.
+Use `cargo gears ls gears` to list available gears in the workspace.
 
 ::: tip
 For the full gear architecture overview, see [Gear Overview](/toolkit/00_gear_overview). For the directory layout and SDK pattern in detail, see [Gear Layout & SDK Pattern](/toolkit/02_gear_layout_and_sdk_pattern).
