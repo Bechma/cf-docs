@@ -57,7 +57,7 @@ This tells `SecureConn` which columns to use for automatic tenant filtering.
 
 ## Migrations
 
-Each module owns its migrations and gets its own migration history table. Raw SQL is allowed **only** in migration files:
+Each gear owns its migrations and gets its own migration history table. Raw SQL is allowed **only** in migration files:
 
 ```rust
 impl DatabaseCapability for MyGear {

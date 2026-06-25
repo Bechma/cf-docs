@@ -1,20 +1,16 @@
 # FAQ
 
-## What is the relationship between modules and gears?
-
-They're the same thing. "Module" is the general term used in the CLI and manifest (`cargo gears generate module`, `modules = [...]`). "Gear" is the domain term used in the toolkit and runtime (`#[toolkit::gear(...)]`). Both refer to a self-contained Rust crate that plugs into the Gears runtime.
-
 ## Do I need to know Rust to use Gears?
 
-Yes. Gears modules are Rust crates and the toolkit is a Rust library. Familiarity with Cargo, traits, async/await, and derive macros is expected.
+Yes. Gears are Rust crates and the toolkit is a Rust library. Familiarity with Cargo, traits, async/await, and derive macros is expected.
 
 ## What databases are supported?
 
 Gears uses [SeaORM](https://www.sea-ql.org/SeaORM/) with SQLx backends. Supported databases are **PostgreSQL**, **MySQL**, and **SQLite**. All database access goes through `SecureConn`, which automatically enforces tenant isolation via scoped queries.
 
-## How does inter-module communication work?
+## How does inter-gear communication work?
 
-Modules communicate through **ClientHub**, a type-safe service locator. Each module registers an implementation of its SDK trait during initialization. Consumers resolve the trait at runtime:
+Gears communicate through **ClientHub**, a type-safe service locator. Each gear registers an implementation of its SDK trait during initialization. Consumers resolve the trait at runtime:
 
 ```rust
 let api = ctx.client_hub().get::<dyn MyGearApi>()?;
@@ -22,12 +18,12 @@ let api = ctx.client_hub().get::<dyn MyGearApi>()?;
 
 In-process calls are direct function calls. Out-of-process calls use gRPC transport implementing the same trait, so consumers don't know (or care) which is used.
 
-## Can I run modules in separate processes?
+## Can I run gears in separate processes?
 
-Yes. Gears supports three deployment models with the same module code:
+Yes. Gears supports three deployment models with the same gear code:
 
-- **Single-node** -- All modules in one process (development, edge, testing)
-- **Multi-node** -- Modules communicate over REST/gRPC
+- **Single-node** -- All gears in one process (development, edge, testing)
+- **Multi-node** -- Gears communicate over REST/gRPC
 - **Kubernetes** -- Containerized services with full orchestration
 
 ## How do I add FIPS-compliant cryptography?
@@ -42,7 +38,7 @@ This activates [aws-lc-rs](https://github.com/aws/aws-lc-rs) as the crypto provi
 
 ## What is the generated server?
 
-The CLI generates an ephemeral Cargo project (under `.gears/` by default) that aggregates your selected modules into a single runnable binary. It is regenerated on every `build` or `run`. The generated server reads its runtime config from the `GEARS_CONFIG` environment variable, which the CLI sets automatically.
+The CLI generates an ephemeral Cargo project (under `.gears/` by default) that aggregates your selected gears into a single runnable binary. It is regenerated on every `build` or `run`. The generated server reads its runtime config from the `GEARS_CONFIG` environment variable, which the CLI sets automatically.
 
 ## How do I run my binary outside the CLI?
 
@@ -56,7 +52,7 @@ GEARS_CONFIG=config/app-dev.yml ./target/release/app-dev
 
 In `Gears.toml` under `[apps.<app>.<env>.lint]`, `[apps.<app>.<env>.test]`, and `[apps.<app>.<env>.build]` respectively. See the [Manifest](/intro/manifest) page for the full schema.
 
-## Can I use an LLM to generate my modules?
+## Can I use an LLM to generate my gears?
 
 Yes. After creating a workspace with `cargo gears new`, you can hand off to an LLM with a prompt like:
 

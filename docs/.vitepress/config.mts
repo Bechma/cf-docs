@@ -45,6 +45,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Docs", link: "/intro/introduction", activeMatch: '/intro/' },
+      { text: "Guides", link: "/guides/", activeMatch: '/guides/' },
       { text: "Toolkit", link: "/toolkit/", activeMatch: '/toolkit/' },
       { text: "Reference", link: "/reference/api-reference", activeMatch: '/reference/' },
     ],
@@ -69,8 +70,8 @@ export default defineConfig({
           text: "Core concepts",
           collapsed: false,
           items: [
-            { text: "Modules", link: "/intro/core/modules" },
-            { text: "System Modules", link: "/intro/core/system-modules" },
+            { text: "Gears", link: "/intro/core/gears" },
+            { text: "System Gears", link: "/intro/core/system-gears" },
             { text: "SDK", link: "/intro/core/sdk" },
             { text: "Database", link: "/intro/core/database" },
             { text: "OData", link: "/intro/core/odata" },
@@ -82,6 +83,18 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: "API reference", link: "/reference/api-reference" },
+          ]
+        }
+      ],
+      "/guides": [
+        {
+          text: "Guides",
+          collapsed: false,
+          items: [
+            { text: "Overview", link: "/guides/" },
+            { text: "Green Project", link: "/guides/green-project" },
+            { text: "Brown Project", link: "/guides/brown-project" },
+            { text: "Migration Project", link: "/guides/migration-project" },
           ]
         }
       ],
